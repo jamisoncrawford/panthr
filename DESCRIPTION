@@ -1,0 +1,11 @@
+Package: panthr
+Type: Package
+Title: Streamlining Preprocessing Tasks with GSU Data
+Version: 1.0.0
+Author: Jamison R. Crawford, Institutional Research Associate
+Maintainer: Jamison R. Crawford <jcrawford52@gsu.edu>
+Description: A package for streamlining basic preprocessing tasks using Georgia State University's most common warehouse variables. 
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.0.2
