@@ -19,7 +19,7 @@ A scalar or vector of values of class character containing
 full-length or abbreviated college names. Missing values are preserved.
 }
 \description{
-This function converts all \code{*COLLEGE} code fields, e.g. \code{GRAD_COLLEGE},
+\code{decode_college} converts all \code{*COLLEGE} code fields, e.g. \code{GRAD_COLLEGE},
 into full-length labels by evaluating a scalar or vector of values of class
 character.
 }
@@ -32,7 +32,7 @@ Values containing unrecognized college codes are coerced to \code{NA}
 (missing) values and a warning message is thrown.
 }
 \seealso{
-
+\code{table}
 }
 \author{
 Jamison R. Crawford, Institutional Research Associate, Georgia State University

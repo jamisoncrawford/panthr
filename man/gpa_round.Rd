@@ -24,7 +24,7 @@ A scalar or vector of GPA values of class numeric containing per the
 given parameters. Missing values are preserved.
 }
 \description{
-This function enhances the base R \code{round} function to allow directionality
+\code{gpa_round} enhances the base R \code{round} function to allow directionality
 in rounding GPA' fields, e.g. \code{GRAD_GPA}, allowing for conventional
 rounding, rounding up, rounding down, and to which decimal place.
 }

@@ -15,7 +15,7 @@ A scalar or vector of values of class character containing
 full-length degree names. Missing values are preserved.
 }
 \description{
-This function converts all \code{*DEGREE} code fields, e.g. \code{GRAD_DEGREE},
+\code{decode_degree} converts all \code{*DEGREE} code fields, e.g. \code{GRAD_DEGREE},
 into full-length labels by evaluating a scalar or vector of values of class
 character.
 }
@@ -28,7 +28,7 @@ Values containing unrecognized degree codes are coerced to \code{NA}
 (missing) values and a warning message is thrown.
 }
 \seealso{
-
+\code{table}
 }
 \author{
 Jamison R. Crawford, Institutional Research Associate, Georgia State University

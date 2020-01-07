@@ -23,7 +23,7 @@ parameter passed to argument \code{range =}, comprised of the lower and upper
 bounds in which the value passed to \code{gpa =} falls. Missing values are preserved.
 }
 \description{
-This function optimizes base R function \code{cut} specifically for values
+\code{gpa_discretize} optimizes base R function \code{cut} specifically for values
 in \code{*GPA} fields, e.g. \code{GRAD_GPA}, by streamlining binning into tenths,
 quarters, thirds, and halves, as well as cleaning bin labels.
 }

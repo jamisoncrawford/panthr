@@ -15,7 +15,7 @@ A scalar or vector of values of class character indicating \code{Fall},
 \code{Summer}, or \code{Spring} according to the term(s) passed.
 }
 \description{
-This function formats the \code{TERM} field by converting it into a string of class
+\code{term_season} formats the \code{TERM} field by converting it into a string of class
 character that matches each term.
 }
 \details{

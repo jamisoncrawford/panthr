@@ -14,7 +14,7 @@ of length n in \code{YYYYMM} format.}
 A scalar or vector of values in \code{YYYY} format with the fiscal year.
 }
 \description{
-This basic function formats the \code{TERM} field by referencing the semester or
+\code{term_year_fiscal} formats the \code{TERM} field by referencing the semester or
 season in order to modify and return the fiscal year during which the term
 took place.
 }

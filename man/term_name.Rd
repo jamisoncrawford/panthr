@@ -18,7 +18,7 @@ A scalar or vector of values of class character combininging season
 and year, e.g. \code{Summer 2016}.
 }
 \description{
-This function formats the \code{TERM} field by converting it into a string of class
+\code{term_name} formats the \code{TERM} field by converting it into a string of class
 character containing the season or semester and calendar year, e.g.
 \code{Fall 2019}. An option is available to customize how season and year are joined.
 }

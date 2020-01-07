@@ -25,7 +25,7 @@ containing a single label describing the combined race and ethnicity code.
 \code{NULL} values are converted into the character string: \code{Not Reported}.
 }
 \description{
-This function formats both the \code{RACE_CODES} and \code{ETHNIC_CODES} fields by
+\code{decode_ethnorace} formats both the \code{RACE_CODES} and \code{ETHNIC_CODES} fields by
 evaluating two scalar values or vectors of values of equal length containing
 race and ethnicity codes. Missing values for both race and ethnicity, as well
 as missing race codes and ethnicity of \code{1}, are converted to \code{Not Reported}.

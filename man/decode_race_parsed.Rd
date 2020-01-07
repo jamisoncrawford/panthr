@@ -17,7 +17,7 @@ converted into full-length labels and separated by commas. \code{NULL} values ar
 converted into the character string: \code{Not Reported}.
 }
 \description{
-This function formats the \code{RACE_CODES} field by evaluating a scalar or vector
+\code{decode_race_parsed} formats the \code{RACE_CODES} field by evaluating a scalar or vector
 of values with race codes and missing values and converting them to all full
 race labels, separated by commas. Missing values are converted to \code{Not Reported}.
 }

@@ -14,7 +14,7 @@ of length n in \code{YYYYMM} format.}
 A scalar or vector of values in \code{YYYY} format with the calendar year.
 }
 \description{
-This basic function formats the \code{TERM} field by eliminating the last two
+\code{term_year_calendar} formats the \code{TERM} field by eliminating the last two
 digits, i.e. from \code{YYYYMM} to \code{YYYY}, in effect converting it to the
 calendar year.
 }

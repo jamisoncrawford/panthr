@@ -1,6 +1,26 @@
+# Load Global Variables from 'sysdata.rda'
+
+globalVariables(c("admit",
+                  "attribute",
+                  "building",
+                  "campus",
+                  "college",
+                  "county",
+                  "decision",
+                  "degree",
+                  "department",
+                  "email",
+                  "grade",
+                  "institution",
+                  "level",
+                  "major",
+                  "state"))
+
+
+
 #' 10,000 Student Graduation Records
 #'
-#' A dataset containing 10,000 records of undergraduate students with degrees
+#' \code{students} is a dataset containing 10,000 records of undergraduate students with degrees
 #' conferred by Georgia State University between Summer, 2007 and Summer, 2019.
 #' The format simulates a 10,000-record SQL query but potentially identifying
 #' data have been shuffled for anonymity.
@@ -22,20 +42,28 @@
 
 #' Format Term by Separating Year and Month
 #'
-#' This basic function formats the \code{TERM} field by separating the 4-digit year
-#' and 2-digit month with a dash. That is, \code{YYYYMM} converts to \code{YYYY-MM}. It
-#' accepts values of both class numeric and character.
+#' \code{term_separate} is a simple function that formats the \code{TERM} field by
+#' separating the 4-digit year and 2-digit month with a user-defined delimiter.
+#' For example, the \code{YYYYMM} format converts to \code{YYYY-MM} by setting
+#' the delimiter to a dash, or \code{"-"}.
 #'
 #' @param term A 6-character \code{TERM} code, which may be a scalar value or vector
 #' of length n in \code{YYYYMM} format.
 #'
-#' @return A scalar \code{TERM} value or vector of \code{TERM} values in \code{YYYY-MM} format.
+#' @param sep A quoted string of class character specifying a delimiter between the
+#' term year and month, e.g. \code{sep = "."} for \code{term = "201908"} results in
+#' \code{2019.08}. Defaults to \code{sep = "_"}.
+#'
+#' @return A scalar \code{TERM} value or vector of \code{TERM} values in
+#' \code{YYYY*MM} delimited format.
 #'
 #' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
 #' @seealso \code{substr}, \code{paste}
+#'
 #' @export
 
-term_dash <- function(term){
+term_separate <- function(term, sep = "-"){
 
   x <- term
   y <- vector()
@@ -47,7 +75,7 @@ term_dash <- function(term){
     if (na){y[i] <- NA}
     else if (!na){y[i] <- paste(substr(x[i], 1, 4),
                                 substr(x[i], 5, 6),
-                                sep = "-")}
+                                sep = sep)}
 
   }
 
@@ -60,7 +88,7 @@ term_dash <- function(term){
 
 #' Format Term as ISO Date
 #'
-#' This function formats the \code{TERM} field by converting it into ISO
+#' \code{term_date_iso} formats the \code{TERM} field by converting it into ISO
 #' (International Organization for Standardization) date format. That is,
 #' the \code{YYYYMM} value converts to \code{YYYY-MM-DD}, using the first day of the
 #' month.
@@ -70,14 +98,17 @@ term_dash <- function(term){
 #'
 #' @return A scalar value or vector values in ISO date format.
 #'
-#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
 #' @details Base functions, e.g. \code{as.Date}, \code{as.POSIXct}, and \code{as.POSXlt},
 #' will coerce return values to various date classes, as ISO format is standard,
 #' unambiguous, and easily recognized by base R.
+#'
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
 #' @seealso \code{substr}, \code{paste}, \code{as.Date}, \code{as.POSIXct}, \code{as.POSIXlt}
+#'
 #' @export
 
-term_date <- function(term){
+term_date_iso <- function(term){
 
   x <- term
   y <- vector()
@@ -102,7 +133,7 @@ term_date <- function(term){
 
 #' Convert Term to Fall, Spring, or Summer
 #'
-#' This function formats the \code{TERM} field by converting it into a string of class
+#' \code{term_season} formats the \code{TERM} field by converting it into a string of class
 #' character that matches each term.
 #'
 #' @param term A 6-character \code{TERM} code, which may be a scalar value or vector
@@ -111,10 +142,13 @@ term_date <- function(term){
 #' @return A scalar or vector of values of class character indicating \code{Fall},
 #' \code{Summer}, or \code{Spring} according to the term(s) passed.
 #'
-#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
 #' @details Output may be made categorical or ordinal nominal using function
 #' \code{factor} or \code{as.factor}, which may specify order.
+#'
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
 #' @seealso \code{factor}, \code{as.factor}
+#'
 #' @export
 
 term_season <- function(term){
@@ -142,7 +176,7 @@ term_season <- function(term){
 
 #' Format Term as Season & Year
 #'
-#' This function formats the \code{TERM} field by converting it into a string of class
+#' \code{term_name} formats the \code{TERM} field by converting it into a string of class
 #' character containing the season or semester and calendar year, e.g.
 #' \code{Fall 2019}. An option is available to customize how season and year are joined.
 #'
@@ -155,10 +189,13 @@ term_season <- function(term){
 #' @return A scalar or vector of values of class character combininging season
 #' and year, e.g. \code{Summer 2016}.
 #'
-#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
 #' @details Output may be made categorical or ordinal nominal using function
 #' \code{factor} or \code{as.factor}, which may specify order.
+#'
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
 #' @seealso \code{factor}, \code{as.factor}
+#'
 #' @export
 
 term_name <- function(term, sep = " "){
@@ -192,7 +229,7 @@ term_name <- function(term, sep = " "){
 
 #' Convert Term to Calendar Year
 #'
-#' This basic function formats the \code{TERM} field by eliminating the last two
+#' \code{term_year_calendar} formats the \code{TERM} field by eliminating the last two
 #' digits, i.e. from \code{YYYYMM} to \code{YYYY}, in effect converting it to the
 #' calendar year.
 #'
@@ -201,11 +238,14 @@ term_name <- function(term, sep = " "){
 #'
 #' @return A scalar or vector of values in \code{YYYY} format with the calendar year.
 #'
-#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
 #' @details Output may be made categorical or ordinal nominal using function
 #' \code{factor} or \code{as.factor}, which may specify order. This function
 #' also allows for easily tallying counts using, e.g., function \code{table}.
+#'
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
 #' @seealso \code{substr}, \code{table}
+#'
 #' @export
 
 term_year_calendar <- function(term){
@@ -230,7 +270,7 @@ term_year_calendar <- function(term){
 
 #' Convert Term to Academic Year
 #'
-#' This basic function formats the \code{TERM} field by referencing the semester or
+#' \code{term_year_academic} formats the \code{TERM} field by referencing the semester or
 #' season in order to modify and return the academic year during which the term
 #' took place.
 #'
@@ -239,11 +279,14 @@ term_year_calendar <- function(term){
 #'
 #' @return A scalar or vector of values in \code{YYYY} format with the academic year.
 #'
-#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
 #' @details Output may be made categorical or ordinal nominal using function
 #' \code{factor} or \code{as.factor}, which may specify order. This function
 #' also allows for easily tallying counts using, e.g., function \code{table}.
+#'
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
 #' @seealso \code{substr}, \code{table}
+#'
 #' @export
 
 term_year_academic <- function(term){
@@ -277,7 +320,7 @@ term_year_academic <- function(term){
 
 #' Convert Term to Fiscal Year
 #'
-#' This basic function formats the \code{TERM} field by referencing the semester or
+#' \code{term_year_fiscal} formats the \code{TERM} field by referencing the semester or
 #' season in order to modify and return the fiscal year during which the term
 #' took place.
 #'
@@ -286,11 +329,14 @@ term_year_academic <- function(term){
 #'
 #' @return A scalar or vector of values in \code{YYYY} format with the fiscal year.
 #'
-#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
 #' @details Output may be made categorical or ordinal nominal using function
 #' \code{factor} or \code{as.factor}, which may specify order. This function
 #' also allows for easily tallying counts using, e.g., function \code{table}.
+#'
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
 #' @seealso \code{substr}, \code{table}
+#'
 #' @export
 
 term_year_fiscal <- function(term){
@@ -324,7 +370,7 @@ term_year_fiscal <- function(term){
 
 #' Convert Sex Codes to Descriptive Labels
 #'
-#' This function formats the \code{SEX} field by evaluating a scalar or vector of
+#' \code{decode_sex} formats the \code{SEX} field by evaluating a scalar or vector of
 #' values with gender codes and missing values. \code{F} is converted to \code{Female},
 #' \code{M} is converted to \code{Male}, and \code{NULL} values are converted to \code{Not Reported}.
 #'
@@ -334,14 +380,16 @@ term_year_fiscal <- function(term){
 #' @return A scalar or vector of values converted into full-length, descriptive labels or
 #' \code{Not Reported} if missing.
 #'
-#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
 #' @details Output may be made categorical using function
 #' \code{factor} or \code{as.factor}. This function also allows for easily
 #' tallying counts using, e.g., function \code{table}.
 #'
 #' Values which are not \code{NULL} nor contain \code{F} or \code{M} are coerced to NA.
 #'
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
 #' @seealso \code{grepl}, \code{table}
+#'
 #' @export
 
 decode_sex <- function(code){
@@ -374,7 +422,7 @@ decode_sex <- function(code){
 
 #' Convert Race Codes to Multiple Labels
 #'
-#' This function formats the \code{RACE_CODES} field by evaluating a scalar or vector
+#' \code{decode_race_parsed} formats the \code{RACE_CODES} field by evaluating a scalar or vector
 #' of values with race codes and missing values and converting them to all full
 #' race labels, separated by commas. Missing values are converted to \code{Not Reported}.
 #'
@@ -386,7 +434,6 @@ decode_sex <- function(code){
 #' converted into full-length labels and separated by commas. \code{NULL} values are
 #' converted into the character string: \code{Not Reported}.
 #'
-#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
 #' @details Output may be made categorical using function
 #' \code{factor} or \code{as.factor}. This function also allows for easily
 #' tallying counts using, e.g., function \code{table}.
@@ -395,7 +442,10 @@ decode_sex <- function(code){
 #' coerced to \code{NA} rather than converted to \code{Not Reported}. In these instances,
 #' a warning message is thrown.
 #'
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
 #' @seealso \code{grepl}, \code{table}, \code{paste}, \code{gsub}
+#'
 #' @export
 
 decode_race_parsed <- function(code){
@@ -434,7 +484,7 @@ decode_race_parsed <- function(code){
 
 #' Convert Race Codes to a Single Label
 #'
-#' This function formats the \code{RACE_CODES} field by evaluating a scalar or vector
+#' \code{decode_race} formats the \code{RACE_CODES} field by evaluating a scalar or vector
 #' of values with race codes and missing values and converting them to a single
 #' category. For example, while \code{B} will convert to \code{Black or African American},
 #' \code{BZ} will convert to \code{Two or More Races}. Missing values are converted to
@@ -448,7 +498,6 @@ decode_race_parsed <- function(code){
 #' converted into a single label describing the race code. \code{NULL} values are
 #' converted into the character string: \code{Not Reported}.
 #'
-#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
 #' @details Output may be made categorical using function
 #' \code{factor} or \code{as.factor}. This function also allows for easily
 #' tallying counts using, e.g., function \code{table}.
@@ -458,7 +507,10 @@ decode_race_parsed <- function(code){
 #' instances, a warning message is thrown. In instances where ethnicity codes
 #' are detected, evaluation halts and an error message is thrown.
 #'
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
 #' @seealso \code{grepl}, \code{table}, \code{paste}, \code{gsub}
+#'
 #' @export
 
 decode_race <- function(code){
@@ -507,7 +559,7 @@ decode_race <- function(code){
 
 #' Convert Ethnicity Codes to a Single Label
 #'
-#' This function formats the \code{ETHNIC_CODES} field by evaluating a scalar or vector
+#' \code{decode_ethnicity} formats the \code{ETHNIC_CODES} field by evaluating a scalar or vector
 #' of values with ethnic codes and missing values and converting them to a single
 #' label. Missing values are converted to \code{Not Reported}.
 #'
@@ -518,7 +570,6 @@ decode_race <- function(code){
 #' containing a single label describing the ethnicity code. \code{NULL} values are
 #' converted into the character string: \code{Not Reported}.
 #'
-#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
 #' @details Output may be made categorical using function
 #' \code{factor} or \code{as.factor}. This function also allows for easily
 #' tallying counts using, e.g., function \code{table}.
@@ -528,7 +579,10 @@ decode_race <- function(code){
 #' instances, a warning message is thrown. In instances where race codes
 #' are detected, evaluation halts and an error message is thrown.
 #'
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
 #' @seealso \code{grepl}, \code{table}, \code{paste}, \code{gsub}
+#'
 #' @export
 
 decode_ethnicity <- function(code){
@@ -564,7 +618,7 @@ decode_ethnicity <- function(code){
 
 #' Convert Race & Ethnicity Codes to Single Labels
 #'
-#' This function formats both the \code{RACE_CODES} and \code{ETHNIC_CODES} fields by
+#' \code{decode_ethnorace} formats both the \code{RACE_CODES} and \code{ETHNIC_CODES} fields by
 #' evaluating two scalar values or vectors of values of equal length containing
 #' race and ethnicity codes. Missing values for both race and ethnicity, as well
 #' as missing race codes and ethnicity of \code{1}, are converted to \code{Not Reported}.
@@ -587,7 +641,6 @@ decode_ethnicity <- function(code){
 #'
 #' \code{NULL} values are converted into the character string: \code{Not Reported}.
 #'
-#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
 #' @details Output may be made categorical using function
 #' \code{factor} or \code{as.factor}. This function also allows for easily
 #' tallying counts using, e.g., function \code{table}.
@@ -601,7 +654,10 @@ decode_ethnicity <- function(code){
 #' ethnicity codes are detected in argument \code{race =}, evaluation is halted and
 #' an error is thrown.
 #'
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
 #' @seealso \code{table}
+#'
 #' @export
 
 decode_ethnorace <- function(race, ethnicity, ethnic.precedence = TRUE){
@@ -657,7 +713,7 @@ decode_ethnorace <- function(race, ethnicity, ethnic.precedence = TRUE){
 
 #' Convert Department Codes to Full Labels
 #'
-#' This function converts all \code{*DEPARTMENT} code fields, e.g. \code{GRAD_DEPARTMENT},
+#' \code{decode_department} converts all \code{*DEPARTMENT} code fields, e.g. \code{GRAD_DEPARTMENT},
 #' into full-length labels by evaluating a scalar or vector of values of class
 #' character.
 #'
@@ -667,7 +723,6 @@ decode_ethnorace <- function(race, ethnicity, ethnic.precedence = TRUE){
 #' @return A scalar or vector of values of class character containing
 #' full-length department names. Missing values are preserved.
 #'
-#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
 #' @details Output may be made categorical using function
 #' \code{factor} or \code{as.factor}. This function also allows for easily
 #' tallying counts using, e.g., function \code{table}.
@@ -675,7 +730,10 @@ decode_ethnorace <- function(race, ethnicity, ethnic.precedence = TRUE){
 #' Values containing unrecognized department codes are coerced to \code{NA}
 #' (missing) values and a warning message is thrown.
 #'
-#' @seealso \code{%in%}, \code{table}
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
+#' @seealso \code{table}
+#'
 #' @export
 
 decode_department <- function(code){
@@ -709,7 +767,7 @@ decode_department <- function(code){
 
 #' Convert College Codes to Full or Abbreviated Labels
 #'
-#' This function converts all \code{*COLLEGE} code fields, e.g. \code{GRAD_COLLEGE},
+#' \code{decode_college} converts all \code{*COLLEGE} code fields, e.g. \code{GRAD_COLLEGE},
 #' into full-length labels by evaluating a scalar or vector of values of class
 #' character.
 #'
@@ -723,7 +781,6 @@ decode_department <- function(code){
 #' @return A scalar or vector of values of class character containing
 #' full-length or abbreviated college names. Missing values are preserved.
 #'
-#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
 #' @details Output may be made categorical using function
 #' \code{factor} or \code{as.factor}. This function also allows for easily
 #' tallying counts using, e.g., function \code{table}.
@@ -731,7 +788,10 @@ decode_department <- function(code){
 #' Values containing unrecognized college codes are coerced to \code{NA}
 #' (missing) values and a warning message is thrown.
 #'
-#' @seealso \code{%in%}, \code{table}
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
+#' @seealso \code{table}
+#'
 #' @export
 
 decode_college <- function(code, short = FALSE){
@@ -766,7 +826,7 @@ decode_college <- function(code, short = FALSE){
 
 #' Convert Degree Codes to Full Labels
 #'
-#' This function converts all \code{*DEGREE} code fields, e.g. \code{GRAD_DEGREE},
+#' \code{decode_degree} converts all \code{*DEGREE} code fields, e.g. \code{GRAD_DEGREE},
 #' into full-length labels by evaluating a scalar or vector of values of class
 #' character.
 #'
@@ -776,7 +836,6 @@ decode_college <- function(code, short = FALSE){
 #' @return A scalar or vector of values of class character containing
 #' full-length degree names. Missing values are preserved.
 #'
-#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
 #' @details Output may be made categorical using function
 #' \code{factor} or \code{as.factor}. This function also allows for easily
 #' tallying counts using, e.g., function \code{table}.
@@ -784,7 +843,10 @@ decode_college <- function(code, short = FALSE){
 #' Values containing unrecognized degree codes are coerced to \code{NA}
 #' (missing) values and a warning message is thrown.
 #'
-#' @seealso \code{%in%}, \code{table}
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
+#' @seealso \code{table}
+#'
 #' @export
 
 decode_degree <- function(code){
@@ -818,7 +880,7 @@ decode_degree <- function(code){
 
 #' Convert Major Codes to Full Labels
 #'
-#' This function converts all \code{*MAJOR} code fields, e.g. \code{GRAD_MAJOR},
+#' \code{decode_major} converts all \code{*MAJOR} code fields, e.g. \code{GRAD_MAJOR},
 #' into full-length labels by evaluating a scalar or vector of values of class
 #' character.
 #'
@@ -828,7 +890,6 @@ decode_degree <- function(code){
 #' @return A scalar or vector of values of class character containing
 #' full-length major names. Missing values are preserved.
 #'
-#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
 #' @details Output may be made categorical using function
 #' \code{factor} or \code{as.factor}. This function also allows for easily
 #' tallying counts using, e.g., function \code{table}.
@@ -836,7 +897,10 @@ decode_degree <- function(code){
 #' Values containing unrecognized major codes are coerced to \code{NA}
 #' (missing) values and a warning message is thrown.
 #'
-#' @seealso \code{%in%}, \code{table}
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
+#' @seealso \code{table}
+#'
 #' @export
 
 decode_major <- function(code){
@@ -868,9 +932,654 @@ decode_major <- function(code){
 
 
 
+#' Convert Admission Codes to Full Descriptions
+#'
+#' \code{decode_admit} converts admission code fields into full-length, descriptive
+#' labels by evaluating a scalar or vector of values of class character.
+#'
+#' @param code A scalar or vector of length n and class character containing
+#' one or more admission codes.
+#'
+#' @param clean A logical value (i.e. \code{TRUE} or \code{FALSE}) indicating
+#' whether descriptions should be converted to a "cleaner", more human-readable format.
+#' Defaults to \code{FALSE}.
+#'
+#' @return A scalar or vector of values of class character containing
+#' full-length admission code descriptions. Missing values are preserved.
+#'
+#' @details Values containing unrecognized admission codes are coerced to \code{NA}
+#' (missing) values and a warning message is thrown.
+#'
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
+#' @export
+
+decode_admit <- function(code, clean = FALSE){
+
+  c <- code
+  v <- vector()
+  a <- admit
+
+  '%!in%' <- function(x,y)!('%in%'(x,y))
+
+  for (i in seq_along(code)){
+
+    if (is.na(c[i])){v[i] <- NA}
+
+    if (!is.na(c[i]) & c[i] %!in% a$admit_code){
+
+      v[i] <- NA
+      warning("One or more values passed to 'code =' was not recognized; coercing to NA", call. = F)
+
+    }
+
+    else if (!is.na(c[i]) & c[i] %in% a$admit_code & clean == FALSE) {v[i] <- a[c[i] == a$admit_code, "admit_full"]}
+
+    else if (!is.na(c[i]) & c[i] %in% a$admit_code & clean == TRUE) {v[i] <- a[c[i] == a$admit_code, "admit_clean"]}
+
+  }
+
+  return(unlist(v))
+
+}
+
+
+
+#' Convert Attribute Codes to Full Labels
+#'
+#' \code{decode_attribute} converts attribute code fields into full-length labels
+#' by evaluating a scalar or vector of values of class character. It also
+#' allows automated "cleaning" of validated values in a more human-readable
+#' format.
+#'
+#' @param code A scalar or vector of length n and class character containing
+#' one or more attribute codes.
+#'
+#' @param clean A logical value (i.e. \code{TRUE} or \code{FALSE}) to
+#' indicate whether returned values should be made more human-readable. Defaults
+#' to \code{FALSE}.
+#'
+#' @return A scalar or vector of values of class character containing
+#' full-length attribute descriptions. Missing values are preserved.
+#'
+#' @details Output may be made categorical using function
+#' \code{factor} or \code{as.factor}. This function also allows for easily
+#' tallying counts using, e.g., function \code{table}.
+#'
+#' Values containing unrecognized attribute codes are coerced to \code{NA}
+#' (missing) values and a warning message is thrown.
+#'
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
+#' @seealso \code{table}
+#'
+#' @export
+
+decode_attribute <- function(code, clean = FALSE){
+
+  c <- code
+  v <- vector()
+  a <- attribute
+
+  '%!in%' <- function(x,y)!('%in%'(x,y))
+
+  for (i in seq_along(code)){
+
+    if (is.na(c[i])){v[i] <- NA}
+
+    if (!is.na(c[i]) & c[i] %!in% a$attribute_code){
+
+      v[i] <- NA
+      warning("One or more values passed to 'code =' was not recognized; coercing to NA", call. = F)
+
+    }
+
+    else if (!is.na(c[i]) & c[i] %in% a$attribute_code & clean == FALSE) {v[i] <- a[c[i] == a$attribute_code, "attribute_full"]}
+
+    else if (!is.na(c[i]) & c[i] %in% a$attribute_code & clean == TRUE) {v[i] <- a[c[i] == a$attribute_code, "attribute_clean"]}
+
+  }
+
+  return(unlist(v))
+
+}
+
+
+
+#' Convert Building Codes to Full Labels
+#'
+#' \code{decode_building} converts building code fields into full-length labels
+#' by evaluating a scalar or vector of values of class character.
+#'
+#' @param code A scalar or vector of length n and class character containing
+#' one or more building codes.
+#'
+#' @return A scalar or vector of values of class character containing
+#' full-length building descriptions. Missing values are preserved.
+#'
+#' @details Output may be made categorical using function
+#' \code{factor} or \code{as.factor}. This function also allows for easily
+#' tallying counts using, e.g., function \code{table}.
+#'
+#' Values containing unrecognized building codes are coerced to \code{NA}
+#' (missing) values and a warning message is thrown.
+#'
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
+#' @seealso \code{table}
+#'
+#' @export
+
+decode_building <- function(code){
+
+  c <- code
+  v <- vector()
+  b <- building
+
+  '%!in%' <- function(x,y)!('%in%'(x,y))
+
+  for (i in seq_along(code)){
+
+    if (is.na(c[i])){v[i] <- NA}
+
+    if (!is.na(c[i]) & c[i] %!in% b$building_code){
+
+      v[i] <- NA
+      warning("One or more values passed to 'code =' was not recognized; coercing to NA", call. = F)
+
+    }
+
+    else if (!is.na(c[i]) & c[i] %in% b$building_code) {v[i] <- b[c[i] == b$building_code, "building_full"]}
+
+  }
+
+  return(unlist(v))
+
+}
+
+
+
+#' Convert Campus Codes to Full Labels
+#'
+#' \code{decode_campus} converts campus code fields into full-length labels
+#' by evaluating a scalar or vector of values of class character. It also
+#' allows automated "cleaning" of validated values in a more human-readable
+#' format.
+#'
+#' @param code A scalar or vector of length n and class character containing
+#' one or more campus codes.
+#'
+#' @param clean A logical value (i.e. \code{TRUE} or \code{FALSE}) to
+#' indicate whether returned values should be made more human-readable. Defaults
+#' to \code{FALSE}.
+#'
+#' @return A scalar or vector of values of class character containing
+#' full-length campus descriptions. Missing values are preserved.
+#'
+#' @details Output may be made categorical using function
+#' \code{factor} or \code{as.factor}. This function also allows for easily
+#' tallying counts using, e.g., function \code{table}.
+#'
+#' Values containing unrecognized campus codes are coerced to \code{NA}
+#' (missing) values and a warning message is thrown.
+#'
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
+#' @seealso \code{table}
+#'
+#' @export
+
+decode_campus <- function(code, clean = FALSE){
+
+  c <- code
+  v <- vector()
+  j <- campus
+
+  '%!in%' <- function(x,y)!('%in%'(x,y))
+
+  for (i in seq_along(code)){
+
+    if (is.na(c[i])){v[i] <- NA}
+
+    if (!is.na(c[i]) & c[i] %!in% j$campus_code){
+
+      v[i] <- NA
+      warning("One or more values passed to 'code =' was not recognized; coercing to NA", call. = F)
+
+    }
+
+    else if (!is.na(c[i]) & c[i] %in% j$campus_code & clean == FALSE) {v[i] <- j[c[i] == j$campus_code, "campus_full"]}
+
+    else if (!is.na(c[i]) & c[i] %in% j$campus_code & clean == TRUE) {v[i] <- j[c[i] == j$campus_code, "campus_clean"]}
+
+  }
+
+  return(unlist(v))
+
+}
+
+
+
+#' Convert County Codes to Full Names
+#'
+#' \code{decode_county} converts county code fields into full-length names
+#' by evaluating a scalar or vector of values of class character. It also
+#' provides the option to include a "County" label.
+#'
+#' @param code A scalar or vector of length n and class character containing
+#' one or more county codes.
+#'
+#' @param label A logical value (i.e. \code{TRUE} or \code{FALSE}) to
+#' indicate whether returned county names should be labeled with "County". Defaults
+#' to \code{FALSE}.
+#'
+#' @return A scalar or vector of values of class character containing
+#' full-length county names Missing values are preserved.
+#'
+#' @details Output may be made categorical using function
+#' \code{factor} or \code{as.factor}. This function also allows for easily
+#' tallying counts using, e.g., function \code{table}.
+#'
+#' Values containing unrecognized county codes are coerced to \code{NA}
+#' (missing) values and a warning message is thrown.
+#'
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
+#' @seealso \code{table}
+#'
+#' @export
+
+decode_county <- function(code, label = FALSE){
+
+  c <- code
+  v <- vector()
+  j <- county
+
+  '%!in%' <- function(x,y)!('%in%'(x,y))
+
+  for (i in seq_along(code)){
+
+    if (is.na(c[i])){v[i] <- NA}
+
+    if (!is.na(c[i]) & c[i] %!in% j$county_code){
+
+      v[i] <- NA
+      warning("One or more values passed to 'code =' was not recognized; coercing to NA", call. = F)
+
+    }
+
+    else if (!is.na(c[i]) & c[i] %in% j$county_code & label == FALSE) {v[i] <- j[c[i] == j$county_code, "county_full"]}
+
+    else if (!is.na(c[i]) & c[i] %in% j$county_code & label == TRUE) {
+
+      v[i] <- j[c[i] == j$county_code, "county_full"]
+
+      v[i] <- paste(v[i], "County", sep = " ")
+
+    }
+
+  }
+
+  return(unlist(v))
+
+}
+
+
+
+#' Convert Decision Codes to Full Descriptions
+#'
+#' \code{decode_decision} converts decision code fields into full-length descriptions
+#' by evaluating a scalar or vector of values of class character. It also
+#' allows automated "cleaning" of validated values in a more human-readable
+#' format.
+#'
+#' @param code A scalar or vector of length n and class character containing
+#' one or more decision codes.
+#'
+#' @param clean A logical value (i.e. \code{TRUE} or \code{FALSE}) to
+#' indicate whether returned values should be made more human-readable. Defaults
+#' to \code{FALSE}.
+#'
+#' @return A scalar or vector of values of class character containing
+#' full-length decision descriptions. Missing values are preserved.
+#'
+#' @details Output may be made categorical using function
+#' \code{factor} or \code{as.factor}. This function also allows for easily
+#' tallying counts using, e.g., function \code{table}.
+#'
+#' Values containing unrecognized decision codes are coerced to \code{NA}
+#' (missing) values and a warning message is thrown.
+#'
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
+#' @seealso \code{table}
+#'
+#' @export
+
+decode_decision <- function(code, clean = FALSE){
+
+  c <- code
+  v <- vector()
+  j <- decision
+
+  '%!in%' <- function(x,y)!('%in%'(x,y))
+
+  for (i in seq_along(code)){
+
+    if (is.na(c[i])){v[i] <- NA}
+
+    if (!is.na(c[i]) & c[i] %!in% j$decision_code){
+
+      v[i] <- NA
+      warning("One or more values passed to 'code =' was not recognized; coercing to NA", call. = F)
+
+    }
+
+    else if (!is.na(c[i]) & c[i] %in% j$decision_code & clean == FALSE) {v[i] <- j[c[i] == j$decision_code, "decision_full"]}
+
+    else if (!is.na(c[i]) & c[i] %in% j$decision_code & clean == TRUE) {v[i] <- j[c[i] == j$decision_code, "decision_clean"]}
+
+  }
+
+  return(unlist(v))
+
+}
+
+
+
+#' Convert Email Codes to Full Descriptions
+#'
+#' \code{decode_email} converts email code fields into full-length descriptions
+#' by evaluating a scalar or vector of values of class character. It also
+#' allows automated "cleaning" of validated values in a more human-readable
+#' format.
+#'
+#' @param code A scalar or vector of length n and class character containing
+#' one or more email codes.
+#'
+#' @param clean A logical value (i.e. \code{TRUE} or \code{FALSE}) to
+#' indicate whether returned values should be made more human-readable. Defaults
+#' to \code{FALSE}.
+#'
+#' @return A scalar or vector of values of class character containing
+#' full-length email descriptions. Missing values are preserved.
+#'
+#' @details Output may be made categorical using function
+#' \code{factor} or \code{as.factor}. This function also allows for easily
+#' tallying counts using, e.g., function \code{table}.
+#'
+#' Values containing unrecognized email codes are coerced to \code{NA}
+#' (missing) values and a warning message is thrown.
+#'
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
+#' @seealso \code{table}
+#'
+#' @export
+
+decode_email <- function(code, clean = FALSE){
+
+  c <- code
+  v <- vector()
+  j <- email
+
+  '%!in%' <- function(x,y)!('%in%'(x,y))
+
+  for (i in seq_along(code)){
+
+    if (is.na(c[i])){v[i] <- NA}
+
+    if (!is.na(c[i]) & c[i] %!in% j$email_code){
+
+      v[i] <- NA
+      warning("One or more values passed to 'code =' was not recognized; coercing to NA", call. = F)
+
+    }
+
+    else if (!is.na(c[i]) & c[i] %in% j$email_code & clean == FALSE) {v[i] <- j[c[i] == j$email_code, "email_full"]}
+
+    else if (!is.na(c[i]) & c[i] %in% j$email_code & clean == TRUE) {v[i] <- j[c[i] == j$email_code, "email_clean"]}
+
+  }
+
+  return(unlist(v))
+
+}
+
+
+
+#' Convert Grade Codes to Full Descriptions
+#'
+#' \code{decode_grade} converts grade code fields into full-length labels
+#' by evaluating a scalar or vector of values of class character. It also
+#' allows automated "cleaning" of validated values in a more human-readable
+#' format. Due to duplications in the validation data, multiple values may be
+#' returned. This function is currently in development.
+#'
+#' @param code A scalar or vector of length n and class character containing
+#' one or more grade codes.
+#'
+#' @param clean A logical value (i.e. \code{TRUE} or \code{FALSE}) to
+#' indicate whether returned values should be made more human-readable. Defaults
+#' to \code{FALSE}.
+#'
+#' @return A scalar or vector of values of class character containing
+#' full-length grade descriptions. Missing values are preserved.
+#'
+#' @details Output may be made categorical using function
+#' \code{factor} or \code{as.factor}. This function also allows for easily
+#' tallying counts using, e.g., function \code{table}.
+#'
+#' Values containing unrecognized grade codes are coerced to \code{NA}
+#' (missing) values and a warning message is thrown.
+#'
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
+#' @seealso \code{table}
+#'
+#' @export
+
+decode_grade <- function(code, clean = FALSE){
+
+  c <- code
+  v <- vector()
+  j <- grade
+
+  '%!in%' <- function(x,y)!('%in%'(x,y))
+
+  for (i in seq_along(code)){
+
+    if (is.na(c[i])){v[i] <- NA}
+
+    if (!is.na(c[i]) & c[i] %!in% j$grade_code){
+
+      v[i] <- NA
+      warning("One or more values passed to 'code =' was not recognized; coercing to NA", call. = F)
+
+    }
+
+    else if (!is.na(c[i]) & c[i] %in% j$grade_code & clean == FALSE) {v[i] <- j[c[i] == j$grade_code, "grade_full"]}
+
+    else if (!is.na(c[i]) & c[i] %in% j$grade_code & clean == TRUE) {v[i] <- j[c[i] == j$grade_code, "grade_clean"]}
+
+  }
+
+  return(unlist(v))
+
+}
+
+
+
+#' Convert Institution Codes to Full Labels
+#'
+#' \code{decode_institution} converts institution code fields into full-length labels
+#' by evaluating a scalar or vector of values of class character.
+#'
+#' @param code A scalar or vector of length n and class character containing
+#' one or more institution codes.
+#'
+#' @return A scalar or vector of values of class character containing
+#' full-length institution labels. Missing values are preserved.
+#'
+#' @details Output may be made categorical using function
+#' \code{factor} or \code{as.factor}. This function also allows for easily
+#' tallying counts using, e.g., function \code{table}.
+#'
+#' Values containing unrecognized institution codes are coerced to \code{NA}
+#' (missing) values and a warning message is thrown.
+#'
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
+#' @seealso \code{table}
+#'
+#' @export
+
+decode_institution <- function(code){
+
+  c <- code
+  v <- vector()
+  j <- institution
+
+  '%!in%' <- function(x,y)!('%in%'(x,y))
+
+  for (i in seq_along(code)){
+
+    if (is.na(c[i])){v[i] <- NA}
+
+    if (!is.na(c[i]) & c[i] %!in% j$institution_code){
+
+      v[i] <- NA
+      warning("One or more values passed to 'code =' was not recognized; coercing to NA", call. = F)
+
+    }
+
+    else if (!is.na(c[i]) & c[i] %in% j$institution_code) {v[i] <- j[c[i] == j$institution_code, "institution_full"]}
+
+  }
+
+  return(unlist(v))
+
+}
+
+
+
+#' Convert Student Level Codes to Full Descriptions
+#'
+#' \code{decode_level} converts student level code fields into full-length descriptions
+#' by evaluating a scalar or vector of values of class character. It also
+#' allows automated "cleaning" of validated values in a more human-readable
+#' format.
+#'
+#' @param code A scalar or vector of length n and class character containing
+#' one or more level codes.
+#'
+#' @param clean A logical value (i.e. \code{TRUE} or \code{FALSE}) to
+#' indicate whether returned values should be made more human-readable. Defaults
+#' to \code{FALSE}.
+#'
+#' @return A scalar or vector of values of class character containing
+#' full-length level descriptions. Missing values are preserved.
+#'
+#' @details Output may be made categorical using function
+#' \code{factor} or \code{as.factor}. This function also allows for easily
+#' tallying counts using, e.g., function \code{table}.
+#'
+#' Values containing unrecognized level codes are coerced to \code{NA}
+#' (missing) values and a warning message is thrown.
+#'
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
+#' @seealso \code{table}
+#'
+#' @export
+
+decode_level <- function(code, clean = FALSE){
+
+  c <- code
+  v <- vector()
+  j <- level
+
+  '%!in%' <- function(x,y)!('%in%'(x,y))
+
+  for (i in seq_along(code)){
+
+    if (is.na(c[i])){v[i] <- NA}
+
+    if (!is.na(c[i]) & c[i] %!in% j$level_code){
+
+      v[i] <- NA
+      warning("One or more values passed to 'code =' was not recognized; coercing to NA", call. = F)
+
+    }
+
+    else if (!is.na(c[i] & clean == FALSE) & c[i] %in% j$level_code) {v[i] <- j[c[i] == j$level_code, "level_full"]}
+
+    else if (!is.na(c[i] & clean == TRUE) & c[i] %in% j$level_code) {v[i] <- j[c[i] == j$level_code, "level_clean"]}
+
+  }
+
+  return(unlist(v))
+
+}
+
+
+
+#' Convert State Codes to Full Names
+#'
+#' \code{decode_state} converts state code fields into full-length names
+#' by evaluating a scalar or vector of values of class character.
+#'
+#' @param code A scalar or vector of length n and class character containing
+#' one or more attribute codes.
+#'
+#' @return A scalar or vector of values of class character containing
+#' full-length state names. Missing values are preserved.
+#'
+#' @details Output may be made categorical using function
+#' \code{factor} or \code{as.factor}. This function also allows for easily
+#' tallying counts using, e.g., function \code{table}.
+#'
+#' Values containing unrecognized state codes are coerced to \code{NA}
+#' (missing) values and a warning message is thrown.
+#'
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
+#' @seealso \code{table}
+#'
+#' @export
+
+decode_state <- function(code){
+
+  c <- code
+  v <- vector()
+  j <- state
+
+  '%!in%' <- function(x,y)!('%in%'(x,y))
+
+  for (i in seq_along(code)){
+
+    if (is.na(c[i])){v[i] <- NA}
+
+    if (!is.na(c[i]) & c[i] %!in% j$state_code){
+
+      v[i] <- NA
+      warning("One or more values passed to 'code =' was not recognized; coercing to NA", call. = F)
+
+    }
+
+    else if (!is.na(c[i]) & c[i] %in% j$state_code) {v[i] <- j[c[i] == j$state_code, "state_full"]}
+
+  }
+
+  return(unlist(v))
+
+}
+
+
+
 #' Round GPA Values Directionally
 #'
-#' This function enhances the base R \code{round} function to allow directionality
+#' \code{gpa_round} enhances the base R \code{round} function to allow directionality
 #' in rounding GPA' fields, e.g. \code{GRAD_GPA}, allowing for conventional
 #' rounding, rounding up, rounding down, and to which decimal place.
 #'
@@ -892,6 +1601,7 @@ decode_major <- function(code){
 #' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
 #'
 #' @seealso \code{round}, \code{ceiling}, \code{floor}
+#'
 #' @export
 
 gpa_round <- function(gpa, digits = 1, direction = "none"){
@@ -919,7 +1629,7 @@ gpa_round <- function(gpa, digits = 1, direction = "none"){
 
 #' Convert GPA Values into Discrete Ranges
 #'
-#' This function optimizes base R function \code{cut} specifically for values
+#' \code{gpa_discretize} optimizes base R function \code{cut} specifically for values
 #' in \code{*GPA} fields, e.g. \code{GRAD_GPA}, by streamlining binning into tenths,
 #' quarters, thirds, and halves, as well as cleaning bin labels.
 #'
@@ -943,6 +1653,7 @@ gpa_round <- function(gpa, digits = 1, direction = "none"){
 #' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
 #'
 #' @seealso \code{cut}, \code{gsub}
+#'
 #' @export
 
 gpa_discretize <- function(gpa, range = "thirds", right = FALSE){
@@ -984,6 +1695,676 @@ gpa_discretize <- function(gpa, range = "thirds", right = FALSE){
 
   v <- gsub(x = v, pattern = ",", replacement = "-")
   v <- gsub(x = v, pattern = "\\[|\\)", replacement = "")
+
+  return(v)
+
+}
+
+
+
+#' Convert Dates to ISO Format
+#'
+#' \code{date_iso} converts date field values in \code{DD-MMM-YY} format to the
+#' International Organization for Standardization (ISO) format, i.e. \code{YYYY-MM-DD}.
+#'
+#' Because the warehouse year format is \code{YY}, dates prior to 1930 C.E. will
+#' automatically convert to post-2000 C.E.
+#'
+#' @param date A scalar or vector of length n and class character containing
+#' one or more date values in \code{DD-MMM-YY} format.
+#'
+#' @return A scalar or vector of values of class character containing
+#' standard ISO dates in \code{YYYY-MM-DD} format. Missing values are preserved.
+#'
+#' @details Values passed to argument \code{date =} which are not in \code{DD-MMM-YY}
+#' format or contain unrecognized month abbreviations are coerced to \code{NA}
+#' (missing) values and a warning message is thrown.
+#'
+#' ISO dates are automatically recognized as dates in R and may be converted to
+#' different formats using \code{as.*} coersion functions, e.g. \code{as.Date}.
+#'
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
+#' @seealso \code{date}, \code{POSIXct}, \code{POSIXlt}
+#'
+#' @export
+
+date_iso <- function(date){
+
+  m <- c("JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC")
+  n <- c(paste0("0", 1:9), 10:12)
+
+  d <- date
+  v <- NA
+
+  for (i in seq_along(d)){
+
+    if (is.na(d[i])) {
+
+      v[i] <- NA
+
+    }
+
+    else if (!is.na(d[i]) & !grepl(x = d[i], pattern = "[0-9]{2}-[A-Z]{3}-[0-9]{2}")) {
+
+      v[i] <- NA
+      warning("One or more values passed to 'date =' are not in 'DD-MMM-YY' format; coercing to NA", call. = F)
+
+    }
+
+    else if (!is.na(d[i]) & !grepl(x = d[i], pattern = "JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC")) {
+
+      v[i] <- NA
+      warning("One or more values passed to 'date =' contain unrecognized month abbreviations; coercing to NA", call. = F)
+
+    }
+
+    else if (!is.na(d[i]) & as.numeric(substr(x = d[i], start = 8, stop = 9)) <= 30){
+
+      day <- NA
+      year <- NA
+      month <- NA
+
+      day[i] <- substr(x = d[i], start = 1, stop = 2)
+      year[i] <- paste0("20", substr(x = d[i], start = 8, stop = 9))
+      month[i] <- substr(x = d[i], start = 4, stop = 6)
+
+      for (j in 1:12){
+
+        month[i] <- gsub(x = month[i], m[j], n[j])
+
+      }
+
+      v[i] <- paste(year[i], month[i], day[i], sep = "-")
+
+    }
+
+    else if (!is.na(d[i]) & as.numeric(substr(x = d[i], start = 8, stop = 9)) > 30){
+
+      day <- NA
+      year <- NA
+      month <- NA
+
+      day[i] <- substr(x = d[i], start = 1, stop = 2)
+      year[i] <- paste0("19", substr(x = d[i], start = 8, stop = 9))
+      month[i] <- substr(x = d[i], start = 4, stop = 6)
+
+      for (j in 1:12){
+
+        month[i] <- gsub(x = month[i], m[j], n[j])
+
+      }
+
+      v[i] <- paste(year[i], month[i], day[i], sep = "-")
+
+    }
+
+  }
+
+  return(v)
+
+}
+
+
+
+
+#' Convert Dates to Full-Length Day, Month, Year
+#'
+#' \code{date_full} converts date field values in \code{DD-MMM-YY} format to long-form,
+#' descriptive dates, including full-length years in \code{YYYY} format and
+#' full-length months, with the option to "cleanly" abbreviate them. The option to
+#' convert to the UK date format is also available.
+#'
+#' Because the warehouse year format is \code{YY}, dates prior to 1930 C.E. will
+#' automatically convert to post-2000 C.E.
+#'
+#' @param date A scalar or vector of length n and class character containing
+#' one or more date values in \code{DD-MMM-YY} format.
+#'
+#' @param abbreviate A logical value (i.e. \code{TRUE} or \code{FALSE}) indicating
+#' whether to convert months to an abbreviated, 3-character format, e.g. "Aug." Defaults
+#' to \code{FALSE}.
+#'
+#' @param uk.notation A logical value (i.e. \code{TRUE} or \code{FALSE}) indicating
+#' whether to reorder day, month, and year to common UK notation. Defaults
+#' to \code{FALSE}.
+#'
+#' @return A scalar or vector of values of class character containing
+#' long-form, descriptive dates including the day, full or abbreviated month, and 4-digit
+#' year, in either US or UK notation.
+#'
+#' @details Values passed to argument \code{date =} which are not in \code{DD-MMM-YY}
+#' format or contain unrecognized month abbreviations are coerced to \code{NA}
+#' (missing) values and a warning message is thrown.
+#'
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
+#' @export
+
+date_full <- function(date, abbreviate = FALSE, uk.notation = FALSE){
+
+  m <- c("JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC")
+  f <- c("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
+  a <- c("Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.", "Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec.")
+
+  d <- date
+  v <- NA
+
+  for (i in seq_along(d)){
+
+    if (is.na(d[i])) {
+
+      v[i] <- NA
+
+    }
+
+    else if (!is.na(d[i]) & !grepl(x = d[i], pattern = "[0-9]{2}-[A-Z]{3}-[0-9]{2}")) {
+
+      v[i] <- NA
+      warning("One or more values passed to 'date =' are not in 'DD-MMM-YY' format; coercing to NA", call. = F)
+
+    }
+
+    else if (!is.na(d[i]) & !grepl(x = d[i], pattern = "JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC")) {
+
+      v[i] <- NA
+      warning("One or more values passed to 'date =' contain unrecognized month abbreviations; coercing to NA", call. = F)
+
+    }
+
+    else if (!is.na(d[i]) & as.numeric(substr(x = d[i], start = 8, stop = 9)) <= 30){
+
+      day <- NA
+      year <- NA
+      month <- NA
+
+      day[i] <- substr(x = d[i], start = 1, stop = 2)
+      year[i] <- paste0("20", substr(x = d[i], start = 8, stop = 9))
+      month[i] <- substr(x = d[i], start = 4, stop = 6)
+
+      if (abbreviate == FALSE){
+
+        for (j in 1:12){
+
+          month[i] <- gsub(x = month[i], m[j], f[j])
+
+        }
+
+      }
+
+      if (abbreviate == TRUE){
+
+        for (j in 1:12){
+
+          month[i] <- gsub(x = month[i], m[j], a[j])
+
+        }
+
+      }
+
+      if (uk.notation == TRUE){
+
+        v[i] <- paste(day[i], month[i], year[i], sep = " ")
+
+      }
+
+      else if (uk.notation == FALSE){
+
+        v[i] <- paste0(month[i], " ", day[i], ", ", year[i])
+
+      }
+
+    }
+
+    else if (!is.na(d[i]) & as.numeric(substr(x = d[i], start = 8, stop = 9)) > 30){
+
+      day <- NA
+      year <- NA
+      month <- NA
+
+      day[i] <- substr(x = d[i], start = 1, stop = 2)
+      year[i] <- paste0("19", substr(x = d[i], start = 8, stop = 9))
+      month[i] <- substr(x = d[i], start = 4, stop = 6)
+
+      if (abbreviate == FALSE){
+
+        for (j in 1:12){
+
+          month[i] <- gsub(x = month[i], m[j], f[j])
+
+        }
+
+      }
+
+      if (abbreviate == TRUE){
+
+        for (j in 1:12){
+
+          month[i] <- gsub(x = month[i], m[j], a[j])
+
+        }
+
+      }
+
+      if (uk.notation == TRUE){
+
+        v[i] <- paste(day[i], month[i], year[i], sep = " ")
+
+      }
+
+      else if (uk.notation == FALSE){
+
+        v[i] <- paste0(month[i], " ", day[i], ", ", year[i])
+
+      }
+
+    }
+
+  }
+
+  return(v)
+
+}
+
+
+
+#' Convert Dates to Calendar Year
+#'
+#' \code{date_year_calendar} converts date field values in \code{DD-MMM-YY} format to full-length
+#' calendar years in \code{YYYY} format.
+#'
+#' Because the warehouse year format is \code{YY}, dates prior to 1930 C.E. will
+#' automatically convert to post-2000 C.E.
+#'
+#' @param date A scalar or vector of length n and class character containing
+#' one or more date values in \code{DD-MMM-YY} format.
+#'
+#' @return A scalar or vector of values of class character containing full-length
+#' calendar years in \code{YYYY} format.
+#'
+#' @details Values passed to argument \code{date =} which are not in \code{DD-MMM-YY}
+#' format or contain unrecognized month abbreviations are coerced to \code{NA}
+#' (missing) values and a warning message is thrown.
+#'
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
+#' @export
+
+date_year_calendar <- function(date){
+
+  d <- date
+  v <- NA
+
+  for (i in seq_along(d)){
+
+    if (is.na(d[i])) {
+
+      v[i] <- NA
+
+    }
+
+    else if (!is.na(d[i]) & !grepl(x = d[i], pattern = "[0-9]{2}-[A-Z]{3}-[0-9]{2}")) {
+
+      v[i] <- NA
+      warning("One or more values passed to 'date =' are not in 'DD-MMM-YY' format; coercing to NA", call. = F)
+
+    }
+
+    else if (!is.na(d[i]) & !grepl(x = d[i], pattern = "JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC")) {
+
+      v[i] <- NA
+      warning("One or more values passed to 'date =' contain unrecognized month abbreviations; coercing to NA", call. = F)
+
+    }
+
+    if (!is.na(d[i]) & as.numeric(substr(x = d[i], start = 8, stop = 9)) <= 30){
+
+      v[i] <- paste0("20", substr(x = d[i], start = 8, stop = 9))
+
+    }
+
+    else if (!is.na(d[i]) & as.numeric(substr(x = d[i], start = 8, stop = 9)) > 30){
+
+      v[i] <- paste0("19", substr(x = d[i], start = 8, stop = 9))
+
+    }
+
+  }
+
+  return(v)
+
+}
+
+
+
+#' Convert Dates to Calendar Month
+#'
+#' \code{date_month} converts date field values in \code{DD-MMM-YY} format to full-length
+#' or abbreviated month names.
+#'
+#' @param date A scalar or vector of length n and class character containing
+#' one or more date values in \code{DD-MMM-YY} format.
+#'
+#' @param abbreviate A logical value (i.e. \code{TRUE} or \code{FALSE}) indicating
+#' whether to convert months to an abbreviated, 3-character format, e.g. "Aug." Defaults
+#' to \code{FALSE}.
+#'
+#' @return A scalar or vector of values of class character containing full-length
+#' or abbreviated month names, e.g. "January" or "Jan", respectively.
+#'
+#' @details Values passed to argument \code{date =} which are not in \code{DD-MMM-YY}
+#' format or contain unrecognized month abbreviations are coerced to \code{NA}
+#' (missing) values and a warning message is thrown.
+#'
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
+#' @export
+
+date_month <- function(date, abbreviate = FALSE){
+
+  m <- c("JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC")
+  f <- c("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
+  a <- c("Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.", "Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec.")
+
+  d <- date
+  v <- NA
+
+  for (i in seq_along(d)){
+
+    if (is.na(d[i])) {
+
+      v[i] <- NA
+
+    }
+
+    if (!is.na(d[i]) & !grepl(x = d[i], pattern = "[0-9]{2}-[A-Z]{3}-[0-9]{2}")) {
+
+      v[i] <- NA
+      warning("One or more values passed to 'date =' are not in 'DD-MMM-YY' format; coercing to NA", call. = F)
+
+    }
+
+    if (!is.na(d[i]) & !grepl(x = d[i], pattern = "JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC")) {
+
+      v[i] <- NA
+      warning("One or more values passed to 'date =' contain unrecognized month abbreviations; coercing to NA", call. = F)
+
+    }
+
+    if (!is.na(d[i]) & abbreviate == FALSE){
+
+      v[i] <- f[which(m == substr(d[i], 4, 6))]
+
+    }
+
+    if (!is.na(d[i]) & abbreviate == TRUE){
+
+      v[i] <- a[which(m == substr(d[i], 4, 6))]
+
+    }
+
+  }
+
+  return(v)
+
+}
+
+
+
+#' Convert Dates to Full-Length Month & Year
+#'
+#' \code{date_month_year} converts date field values in \code{DD-MMM-YY} format to full-length
+#' or abbreviated month names and 4-digit years in \code{YYYY} format.
+#'
+#' Because the warehouse year format is \code{YY}, dates prior to 1930 C.E. will
+#' automatically convert to post-2000 C.E.
+#'
+#' @param date A scalar or vector of length n and class character containing
+#' one or more date values in \code{DD-MMM-YY} format.
+#'
+#' @param sep A single, quoted string of class character specifying which punctuation,
+#' characters, or metacharacters are used to separate month and year. Defaults to
+#' a single space, or \code{sep = " "}.
+#'
+#' @param abbreviate A logical value (i.e. \code{TRUE} or \code{FALSE}) indicating
+#' whether to convert months to an abbreviated, 3-character format, e.g. "Aug." Defaults
+#' to \code{FALSE}.
+#'
+#' @return A scalar or vector of values of class character containing full-length
+#' or abbreviated month names, as well as a 4-digit year in \code{YYYY} format,
+#' separated per user-specified delimiters.
+#'
+#' @details Values passed to argument \code{date =} which are not in \code{DD-MMM-YY}
+#' format or contain unrecognized month abbreviations are coerced to \code{NA}
+#' (missing) values and a warning message is thrown.
+#'
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
+#' @export
+
+date_month_year <- function(date, sep = " ", abbreviate = FALSE){
+
+  m <- c("JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC")
+  f <- c("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
+  a <- c("Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.", "Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec.")
+
+  d <- date
+  v <- NA
+
+  for (i in seq_along(d)){
+
+    if (is.na(d[i])) {
+
+      v[i] <- NA
+
+    }
+
+    else if (!is.na(d[i]) & !grepl(x = d[i], pattern = "[0-9]{2}-[A-Z]{3}-[0-9]{2}")) {
+
+      v[i] <- NA
+      warning("One or more values passed to 'date =' are not in 'DD-MMM-YY' format; coercing to NA", call. = F)
+
+    }
+
+    else if (!is.na(d[i]) & !grepl(x = d[i], pattern = "JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC")) {
+
+      v[i] <- NA
+      warning("One or more values passed to 'date =' contain unrecognized month abbreviations; coercing to NA", call. = F)
+
+    }
+
+    if (!is.na(d[i]) & as.numeric(substr(x = d[i], start = 8, stop = 9)) <= 30){
+
+      if (!is.na(d[i]) & abbreviate == FALSE){
+
+        v[i] <- paste(f[which(m == substr(d[i], 4, 6))],
+                      paste0("20", substr(d[i], 8, 9)),
+                      sep = sep)
+
+      }
+
+      if (!is.na(d[i]) & abbreviate == TRUE){
+
+        v[i] <- paste(a[which(m == substr(d[i], 4, 6))],
+                      paste0("20", substr(d[i], 8, 9)),
+                      sep = sep)
+
+      }
+
+    }
+
+    else if (!is.na(d[i]) & as.numeric(substr(x = d[i], start = 8, stop = 9)) > 30){
+
+      if (!is.na(d[i]) & abbreviate == FALSE){
+
+        v[i] <- paste(f[which(m == substr(d[i], 4, 6))],
+                      paste0("19", substr(d[i], 8, 9)),
+                      sep = sep)
+
+      }
+
+      if (!is.na(d[i]) & abbreviate == TRUE){
+
+        v[i] <- paste(a[which(m == substr(d[i], 4, 6))],
+                      paste0("19", substr(d[i], 8, 9)),
+                      sep = sep)
+
+      }
+
+    }
+
+  }
+
+  return(v)
+
+}
+
+
+
+#' Convert Dates to Academic Terms
+#'
+#' \code{date_term} converts date field values in \code{DD-MMM-YY} format to standard
+#' academic terms in \code{YYYYMM} format. Dates falling within each term are assigned
+#' to the existing semester, i.e. "Fall", "Spring", and "Summer" as \code{08},
+#' \code{01}, and \code{05}, respectively. The option to "round up" to the subsequent
+#' semester is also available.
+#'
+#' Notably, converion to academic terms fluidly opens all \code{term*} family functions,
+#' e.g. \code{term_year_fiscal}, in package \code{panthr}.
+#'
+#' Because the warehouse year format is \code{YY}, dates prior to 1930 C.E. will
+#' automatically convert to post-2000 C.E.
+#'
+#' @param date A scalar or vector of length n and class character containing
+#' one or more date values in \code{DD-MMM-YY} format.
+#'
+#' @param round.up A logical value (i.e. \code{TRUE} or \code{FALSE}) indicating
+#' whether to convert date values to the subsequent academic term. Defaults
+#' to \code{FALSE}.
+#'
+#' @return A scalar or vector of values of class character containing standardized
+#' terms in \code{YYYYMM} format.
+#'
+#' @details Values passed to argument \code{date =} which are not in \code{DD-MMM-YY}
+#' format or contain unrecognized month abbreviations are coerced to \code{NA}
+#' (missing) values and a warning message is thrown.
+#'
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
+#' @seealso \code{term_dash}, \code{term_date}, \code{term_name}, \code{term_season},
+#' \code{term_year_academic}, \code{term_year_calendar}, \code{term_year_academic}
+#'
+#' @export
+
+date_term <- function(date, round.up = FALSE){
+
+  m <- c("JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC")
+  n <- c(paste0("0", 1:9), 10:12)
+
+  d <- date
+  v <- NA
+
+  for (i in seq_along(d)){
+
+    if (is.na(d[i])) {
+
+      v[i] <- NA
+
+    }
+
+    else if (!is.na(d[i]) & !grepl(x = d[i], pattern = "[0-9]{2}-[A-Z]{3}-[0-9]{2}")) {
+
+      v[i] <- NA
+      warning("One or more values passed to 'date =' are not in 'DD-MMM-YY' format; coercing to NA", call. = F)
+
+    }
+
+    else if (!is.na(d[i]) & !grepl(x = d[i], pattern = "JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC")) {
+
+      v[i] <- NA
+      warning("One or more values passed to 'date =' contain unrecognized month abbreviations; coercing to NA", call. = F)
+
+    }
+
+    else if (!is.na(d[i]) & as.numeric(substr(x = d[i], start = 8, stop = 9)) <= 30){
+
+      term <- NA
+      year <- NA
+      month <- NA
+
+      year[i] <- paste0("20", substr(x = d[i], start = 8, stop = 9))
+      month[i] <- n[which(m == substr(x = d[i], start = 4, stop = 6))]
+
+      x <- month[i]
+
+      if (round.up == FALSE){
+
+        if (as.numeric(x) >= 1 & as.numeric(x) < 5){x <- "01"}
+        if (as.numeric(x) >= 5 & as.numeric(x) < 8){x <- "05"}
+        if (as.numeric(x) >= 8 & as.numeric(x) <= 12){x <- "08"}
+
+        v[i] <- paste0(year[i], x)
+
+      }
+
+      if (round.up == TRUE){
+
+        if (as.numeric(x) >= 1 & as.numeric(x) < 5){x <- "05"}
+        if (as.numeric(x) >= 5 & as.numeric(x) < 8){x <- "08"}
+        if (as.numeric(x) >= 8 & as.numeric(x) <= 12){
+
+          x <- "01"
+
+          year[i] <- as.character(as.numeric(year[i]) + 1)
+
+          }
+
+        v[i] <- paste0(year[i], x)
+
+      }
+
+    }
+
+    else if (!is.na(d[i]) & as.numeric(substr(x = d[i], start = 8, stop = 9)) > 30){
+
+      term <- NA
+      year <- NA
+      month <- NA
+
+      year[i] <- paste0("19", substr(x = d[i], start = 8, stop = 9))
+      month[i] <- n[which(m == substr(x = d[i], start = 4, stop = 6))]
+
+      x <- month[i]
+
+      if (round.up == FALSE){
+
+        if (as.numeric(x) >= 1 & as.numeric(x) < 5){x <- "01"}
+        if (as.numeric(x) >= 5 & as.numeric(x) < 8){x <- "05"}
+        if (as.numeric(x) >= 8 & as.numeric(x) <= 12){x <- "08"}
+
+        v[i] <- paste0(year[i], x)
+
+      }
+
+      if (round.up == TRUE){
+
+        if (as.numeric(x) >= 1 & as.numeric(x) < 5){x <- "05"}
+        if (as.numeric(x) >= 5 & as.numeric(x) < 8){x <- "08"}
+        if (as.numeric(x) >= 8 & as.numeric(x) <= 12){
+
+          x <- "01"
+
+          year[i] <- as.character(as.numeric(year[i]) + 1)
+
+          }
+
+        v[i] <- paste0(year[i], x)
+
+      }
+
+    }
+
+  }
 
   return(v)
 

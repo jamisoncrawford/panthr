@@ -17,7 +17,7 @@ converted into a single label describing the race code. \code{NULL} values are
 converted into the character string: \code{Not Reported}.
 }
 \description{
-This function formats the \code{RACE_CODES} field by evaluating a scalar or vector
+\code{decode_race} formats the \code{RACE_CODES} field by evaluating a scalar or vector
 of values with race codes and missing values and converting them to a single
 category. For example, while \code{B} will convert to \code{Black or African American},
 \code{BZ} will convert to \code{Two or More Races}. Missing values are converted to

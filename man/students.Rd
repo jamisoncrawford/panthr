@@ -12,7 +12,7 @@ GSU Data Warehouse: \code{edwprd.sdmcohortfr_us}
 students
 }
 \description{
-A dataset containing 10,000 records of undergraduate students with degrees
+\code{students} is a dataset containing 10,000 records of undergraduate students with degrees
 conferred by Georgia State University between Summer, 2007 and Summer, 2019.
 The format simulates a 10,000-record SQL query but potentially identifying
 data have been shuffled for anonymity.

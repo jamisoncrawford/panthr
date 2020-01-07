@@ -16,7 +16,7 @@ containing a single label describing the ethnicity code. \code{NULL} values are
 converted into the character string: \code{Not Reported}.
 }
 \description{
-This function formats the \code{ETHNIC_CODES} field by evaluating a scalar or vector
+\code{decode_ethnicity} formats the \code{ETHNIC_CODES} field by evaluating a scalar or vector
 of values with ethnic codes and missing values and converting them to a single
 label. Missing values are converted to \code{Not Reported}.
 }

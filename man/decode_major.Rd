@@ -15,7 +15,7 @@ A scalar or vector of values of class character containing
 full-length major names. Missing values are preserved.
 }
 \description{
-This function converts all \code{*MAJOR} code fields, e.g. \code{GRAD_MAJOR},
+\code{decode_major} converts all \code{*MAJOR} code fields, e.g. \code{GRAD_MAJOR},
 into full-length labels by evaluating a scalar or vector of values of class
 character.
 }
@@ -28,7 +28,7 @@ Values containing unrecognized major codes are coerced to \code{NA}
 (missing) values and a warning message is thrown.
 }
 \seealso{
-
+\code{table}
 }
 \author{
 Jamison R. Crawford, Institutional Research Associate, Georgia State University

@@ -15,7 +15,7 @@ A scalar or vector of values converted into full-length, descriptive labels or
 \code{Not Reported} if missing.
 }
 \description{
-This function formats the \code{SEX} field by evaluating a scalar or vector of
+\code{decode_sex} formats the \code{SEX} field by evaluating a scalar or vector of
 values with gender codes and missing values. \code{F} is converted to \code{Female},
 \code{M} is converted to \code{Male}, and \code{NULL} values are converted to \code{Not Reported}.
 }
