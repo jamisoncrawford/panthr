@@ -1,4 +1,4 @@
-# Package panthr: An R Extension for Streamlining GSU Data Processing
+# Package panthr: Streamlining GSU Data Processing in R
 
 Package `panthr` was created with the express purpose of fluidly streamlining 
 common albeit tedious data cleaning and manipulation tasks with field and value 
