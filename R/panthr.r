@@ -2369,3 +2369,238 @@ date_term <- function(date, round.up = FALSE){
   return(v)
 
 }
+
+
+
+#' Modify Separating Characters in Field Names
+#'
+#' \code{field_separator} accepts tabular data with column headers or field names
+#' and modifies the separating characters within the column names. Because warehouse
+#' field names are separated by underscores (\code{_}), this replaces underscores
+#' with one or more user-defined characters or metacharacters.
+#'
+#'
+#' @param data A \code{data.frame}, \code{matrix}, or other tabular object with
+#' identifiable column headers or field names.
+#'
+#' @param sep A single character string in quotations specifying the character(s)
+#' used to separate words in the column headers or field names. Defaults to a
+#' single space, i.e. \code{sep = " "}.
+#'
+#' @return A \code{data.frame} object or other tabular data structure with modified
+#' separators in column headers, as specified by the user in \code{sep =}.
+#'
+#' @details Objects passed to argument \code{data =} that are not tabular or, if
+#' comprised of a single column, without column names will throw an error.
+#'
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
+#' @seealso \code{gsub}, \code{names}, \code{colnames}, \code{ncol}
+#'
+#' @export
+
+field_separator <- function(data, sep = " "){
+
+  if (ncol(data) < 1 | is.null(ncol(data)) | is.vector(data)){
+
+    stop("Argument 'data =' requires tabular data with at least one column header or named field", call. = FALSE)
+
+  }
+
+  else if (!is.null(ncol(data))) {
+
+    colnames(data) <- gsub(x = colnames(data), pattern = "_", replacement = sep)
+
+  }
+
+  return(data)
+
+}
+
+
+
+#' Modify Case & Separators in Field Names
+#'
+#' \code{field_case} is a versatile function that accepts tabular data with column
+#' headers or field names and modifies their case, separators and, for special
+#' cases, initial letter capitalization.
+#'
+#' \code{field_case} automatically formats field names to all lowercase letters
+#' and underscore separators (\code{_}). However, it supports both "lower", "upper",
+#' and "title" cases, exotic cases such as "camel", "kebab", "snake", and "leopard",
+#' and custom separators where applicable.
+#'
+#' @param data A \code{data.frame}, \code{matrix}, or other tabular object with
+#' identifiable column headers or field names.
+#'
+#' @param case A single character string in quotations specifying the case in which
+#' column headers or field names will convert. Acceptable parameters include \code{"lower"},
+#' \code{"upper"}, \code{"title"}, \code{"camel"}, \code{"snake"}, \code{"leopard"},
+#' and \code{"kebab"}. Defaults to \code{case = "lower"}.
+#'
+#' @param sep A single character string in quotations specifying the character(s)
+#' used to separate words in column headers or field names. Defaults to a
+#' single space, i.e. \code{sep = " "}.
+#'
+#' Conflicting parameters passed to \code{sep =} are overridden with exotic cases,
+#' since they use specific separators by default (e.g. \code{"-"}, \code{"_"}, \code{"."})
+#' or no separator in the case of \code{"camel"}. In such cases, a warning is thrown
+#' alerting the user of the override.
+#'
+#' @param lower.case A logical value (\code{TRUE} or \code{FALSE}) indicating whether
+#' all characters in one or more column headers or field names should be lowercase.
+#' Defaults to \code{lower.case = TRUE}.
+#'
+#' Conflicting parameters passed to \code{lower.case =} may be overridden when conflicting
+#' with parameters passed to argument \code{case =}, e.g. \code{"title"}, \code{"upper"},
+#' and \code{"camel"}. This argument distinguishes "upper" and "lower" cases,
+#' particularly for exotic cases, e.g. "upper snake case" and "lower snake case".
+#'
+#' @return A \code{data.frame} object or other tabular data structure with a modified
+#' case and separators in column headers and field names specified by the user.
+#'
+#' @details Objects passed to argument \code{data =} that are not tabular or, if
+#' comprised of a single column, without column names will throw an error.
+#'
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
+#' @seealso \code{gsub}, \code{names}, \code{colnames}, \code{ncol}, \code{tolower},
+#' \code{toupper}, \code{toTitleCase}
+#'
+#' @export
+
+field_case <- function(data, case = "lower", sep = "_", lower.case = TRUE){
+
+  if (ncol(data) < 1 | is.null(ncol(data)) | is.vector(data)){
+
+    stop("Argument 'data =' requires tabular data with at least one column header or named field", call. = FALSE)
+
+  }
+
+  if (sum(grepl(x = c("lower", "upper", "title", "camel", "snake", "leopard", "kebab"), pattern = case)) == 0){
+
+    stop("Argument 'case =' contains an unrecognizable string; run 'help(field_case)' to see available cases", call. = FALSE)
+
+  }
+
+  if (case == "camel" & sep != ""){
+
+    warning("Argument 'sep =' has been overridden for 'camel' case", call. = FALSE)
+
+  }
+
+  if (case == "camel" & lower.case == TRUE){
+
+    warning("Argument 'lower.case =' has been overridden for 'camel' case", call. = FALSE)
+
+  }
+
+  if (case == "kebab" & sep != "-"){
+
+    warning("Argument 'sep =' has been overridden for 'kebab' case", call. = FALSE)
+
+  }
+
+  if (case == "snake" & sep != "_"){
+
+    warning("Argument 'sep =' has been overridden for 'snake' case", call. = FALSE)
+
+  }
+
+  if (case == "leopard" & sep != "."){
+
+    warning("Argument 'sep =' has been overridden for 'leopard' case", call. = FALSE)
+
+  }
+
+  if (case == "upper" & lower.case == TRUE){
+
+    warning("Argument 'lower.case =' has been overridden for 'upper' case", call. = FALSE)
+
+  }
+
+  if (case == "title" & lower.case == TRUE){
+
+    warning("Argument 'lower.case =' has been overridden for 'title' case", call. = FALSE)
+
+  }
+
+  if (case == "lower" & lower.case == FALSE){
+
+    warning("Argument 'lower.case =' has been overridden for 'lower' case", call. = FALSE)
+
+  }
+
+  if (case == "camel"){
+
+    colnames(data) <- gsub(x = tools::toTitleCase(tolower(gsub(x = colnames(data),
+                                                               pattern = "_",
+                                                               replacement = " "))),
+                           pattern = " ",
+                           replacement = "")
+
+  }
+
+  if (case == "snake"){
+
+    colnames(data) <- gsub(x = tools::toTitleCase(tolower(gsub(x = colnames(data),
+                                                               pattern = "_",
+                                                               replacement = " "))),
+                           pattern = " ",
+                           replacement = "_")
+
+  }
+
+  if (case == "kebab"){
+
+    colnames(data) <- gsub(x = tools::toTitleCase(tolower(gsub(x = colnames(data),
+                                                               pattern = "_",
+                                                               replacement = " "))),
+                           pattern = " ",
+                           replacement = "-")
+
+  }
+
+  if (case == "leopard"){
+
+    colnames(data) <- gsub(x = tools::toTitleCase(tolower(gsub(x = colnames(data),
+                                                               pattern = "_",
+                                                               replacement = " "))),
+                           pattern = " ",
+                           replacement = ".")
+
+  }
+
+  if (case == "title"){
+
+    colnames(data) <- gsub(x = tools::toTitleCase(tolower(gsub(x = colnames(data),
+                                                               pattern = "_",
+                                                               replacement = " "))),
+                           pattern = " ",
+                           replacement = sep)
+
+  }
+
+  if (case == "upper"){
+
+    colnames(data) <- gsub(x = toupper(colnames(data)), pattern = "_", replacement = sep)
+
+  }
+
+  if (case == "lower"){
+
+
+    colnames(data) <- gsub(x = tolower(colnames(data)), pattern = "_", replacement = sep)
+
+
+  }
+
+  if (lower.case == TRUE & case != "camel" & case != "title" & case != "upper") {
+
+    colnames(data) <- tolower(colnames(data))
+
+  }
+
+  return(data)
+
+}
