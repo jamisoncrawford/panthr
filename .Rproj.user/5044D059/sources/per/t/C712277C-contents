@@ -1,0 +1,261 @@
+# PACKAGE PANTHR DATASETS
+
+    #' Date: 2020-01-06
+    #' R Version: 3.6.1
+    #' RStudio Version: 1.2.1578
+    #' Operating System: Windows 10
+
+    #' Description: Internal validation data and an external practice dataset for package panthr.
+
+
+
+# SET WORKING DIRECTORY & READ IN DATASETS
+
+setwd("~/GSUR Community of Practice/panthr")
+
+if(!require(readr)){install.packages("readr")}
+if(!require(dplyr)){install.packages("dplyr")}
+if(!require(stringr)){install.packages("stringr")}
+
+library(readr)
+library(dplyr)
+library(stringr)
+
+
+
+# READ IN PANTHR INTERNAL DATASETS
+
+major <- read_csv("old/major_validation.csv")
+degree <- read_csv("old/degree_validation.csv")
+college <- read_csv("old/college_validation.csv")
+department <- read_csv("old/department_validation.csv")
+state <- read_csv("old/state_validation.csv")
+country <- read_csv("old/country_validation.csv")
+
+admit <- read_csv("old/admit_validation.csv")
+attribute <- read_csv("old/attribute_validation.csv")
+building <- read_csv("old/building_validation.csv")
+campus <- read_csv("old/campus_validation.csv")
+county <- read_csv("old/county_validation.csv")
+decision <- read_csv("old/decision_validation.csv")
+email <- read_csv("old/email_validation.csv")
+grade <- read_csv("old/grade_validation.csv")
+institution <- read_csv("old/institution_validation.csv")
+level <- read_csv("old/level_validation.csv")
+
+
+
+# PROCESS INTERNAL DATASETS
+
+names(major) <- c("major_code", "major_full")
+names(degree) <- c("degree_code", "degree_full")
+names(college) <- c("college_code", "college_full")
+names(department) <- c("department_code", "department_full")
+names(state) <- c("state_code", "state_full")
+names(country) <- c("country_code", "country_full")
+names(admit) <- c("admit_code", "admit_full")
+names(attribute) <- c("attribute_code", "attribute_full")
+names(building) <- c("building_code", "building_full")
+names(campus) <- c("campus_code", "campus_full")
+names(county) <- c("county_code", "county_full")
+names(decision) <- c("decision_code", "decision_full")
+names(email) <- c("email_code", "email_full")
+names(grade) <- c("grade_code", "grade_full")
+names(institution) <- c("institution_code", "institution_full")
+names(level) <- c("level_code", "level_full")
+
+
+
+# COLLEGE CODES
+
+college$college_short <- c("Health Sciences",
+                           "Business",
+                           "Law",
+                           "Superuser",
+                           "U. College",
+                           "Standing",
+                           "Arts & Sciences",
+                           "Education",
+                           "Dev. Studies",
+                           "Urban Affairs",
+                           "Business Admin.",
+                           "Policy Studies",
+                           "Health & Human",
+                           "Gen. Studies",
+                           "Gov. Admin.",
+                           "Urban Life",
+                           "Uni. Wide",
+                           "Nursing",
+                           "Health Prof.",
+                           "Inst. Pub. Health",
+                           "Ed./Human Dev.",
+                           "Honors",
+                           "Sch. P. Health",
+                           "Perimeter",
+                           "Biomedical Sci.",
+                           "College of Arts")
+
+
+
+# ADMIT CODES
+
+admit$admit_clean <- gsub(x = admit$admit_full, pattern = "\\*", replacement = "")
+admit$admit_clean <- gsub(x = admit$admit_clean, pattern = "  ", replacement = " ")
+admit$admit_clean <- gsub(x = admit$admit_clean, pattern = "\\( ", replacement = "\\(")
+admit$admit_clean <- gsub(x = admit$admit_clean, pattern = "< ", replacement = "<")
+admit$admit_clean <- gsub(x = admit$admit_clean, pattern = "Admissi$", replacement = "Admission")
+admit$admit_clean <- gsub(x = admit$admit_clean, pattern = "Transfer-", replacement = "Transfer -")
+admit$admit_clean <- gsub(x = admit$admit_clean, pattern = "Res$", replacement = "Resident")
+admit$admit_clean <- gsub(x = admit$admit_clean, pattern = "Traditional-", replacement = "Traditional -")
+admit$admit_clean <- gsub(x = admit$admit_clean, pattern = "Freshman-", replacement = "Freshman -")
+admit$admit_clean <- gsub(x = admit$admit_clean, pattern = "FR- ", replacement = "FR - ")
+admit$admit_clean <- gsub(x = admit$admit_clean, pattern = "Intl|Int'l", replacement = "International")
+admit$admit_clean <- gsub(x = admit$admit_clean, pattern = "tr hrs", replacement = "Traditional Hours")
+admit$admit_clean <- gsub(x = admit$admit_clean, pattern = "Credentials\\(", replacement = "Credentials (")
+admit$admit_clean <- gsub(x = admit$admit_clean, pattern = "Non Core", replacement = "Non-Core")
+admit$admit_clean <- gsub(x = admit$admit_clean, pattern = "Grad w/ Int", replacement = "Graduate with Int")
+admit$admit_clean <- gsub(x = admit$admit_clean, pattern = "International Spec ", replacement = "International Special ")
+
+admit[which(is.na(admit$admit_code)), "admit_code"] <- "NA"
+admit[which(is.na(admit$admit_clean)), "admit_code"] <- "NA"
+
+
+
+# ATTRIBUTE CODES
+
+attribute$attribute_clean <- gsub(x = attribute$attribute_full, pattern = "P:", replacement = "P: ")
+attribute$attribute_clean <- gsub(x = attribute$attribute_clean, pattern = "PT:", replacement = "PT: ")
+
+
+
+# CAMPUS CODES
+
+campus$campus_clean <- gsub(x = campus$campus_full, pattern = "\\*", replacement = "")
+campus$campus_clean <- gsub(x = campus$campus_clean, pattern = "USE: |USE:", replacement = "USE: ")
+campus$campus_clean <- gsub(x = campus$campus_clean, pattern = "-Associates courses", replacement = "- Associates Courses")
+campus$campus_clean <- gsub(x = campus$campus_clean, pattern = "Mand\\.", replacement = "Mandatory")
+campus$campus_clean <- gsub(x = campus$campus_clean, pattern = "Facil\\.", replacement = "Facility")
+campus$campus_clean <- gsub(x = campus$campus_clean, pattern = "RobinsRC", replacement = "Robins RC")
+campus$campus_clean <- gsub(x = campus$campus_clean, pattern = "Uni Sys", replacement = "University System")
+
+
+
+# DECISION CODES
+
+decision[which(is.na(decision$decision_code)), "decision_code"] <- "NA"
+
+decision$decision_clean <- gsub(x = decision$decision_full, pattern = "Accept-|Accept -|Accept - ", replacement = "Accept - ")
+decision$decision_clean <- gsub(x = decision$decision_clean, pattern = "Deny-|Deny -|Deny - ", replacement = "Deny - ")
+decision$decision_clean <- gsub(x = decision$decision_clean, pattern = "Incomplete-|Incomplete -|Incomplete - ", replacement = "Incomplete - ")
+decision$decision_clean <- gsub(x = decision$decision_clean, pattern = "Final-|Final -|Final - ", replacement = "Final - ")
+decision$decision_clean <- gsub(x = decision$decision_clean, pattern = "Conditional-|Conditional -|Conditional - ", replacement = "Conditional - ")
+decision$decision_clean <- gsub(x = decision$decision_clean, pattern = "Duplicate-|Duplicate -|Duplicate - ", replacement = "Duplicate - ")
+decision$decision_clean <- gsub(x = decision$decision_clean, pattern = "Provisional-|Provisional -|Provisional - ", replacement = "Provisional - ")
+decision$decision_clean <- gsub(x = decision$decision_clean, pattern = "Complete-|Complete -|Complete - ", replacement = "Complete - ")
+decision$decision_clean <- gsub(x = decision$decision_clean, pattern = "Deferred-|Deferred -|Deferred - ", replacement = "Deferred - ")
+decision$decision_clean <- gsub(x = decision$decision_clean, pattern = "Denied-|Denied -|Denied - ", replacement = "Denied - ")
+
+decision$decision_clean <- gsub(x = decision$decision_clean, pattern = "refer", replacement = "Refer")
+decision$decision_clean <- gsub(x = decision$decision_clean, pattern = "Intl", replacement = "International")
+decision$decision_clean <- gsub(x = decision$decision_clean, pattern = "space", replacement = "Space")
+decision$decision_clean <- gsub(x = decision$decision_clean, pattern = "received", replacement = "Received")
+decision$decision_clean <- gsub(x = decision$decision_clean, pattern = "not attend", replacement = "Not Attend")
+decision$decision_clean <- gsub(x = decision$decision_clean, pattern = "Points\\?", replacement = "Points")
+decision$decision_clean <- gsub(x = decision$decision_clean, pattern = "w/ self reported grades", replacement = "with Self-Reported Grades")
+decision$decision_clean <- gsub(x = decision$decision_clean, pattern = "Pre-reqs", replacement = "Pre-Requisites")
+decision$decision_clean <- gsub(x = decision$decision_clean, pattern = "Withdrawn.*INT Options", replacement = "Withdrawn - INT Options")
+
+decision$decision_full <- gsub(x = decision$decision_full, pattern = "Withdrawn.*INT Options", replacement = "Withdrawn - INT Options")
+
+
+
+# EMAIL CODES
+
+email$email_clean <- gsub(x = email$email_full, pattern = "Ex-spouse", replacement = "Ex-Spouse")
+
+
+
+# GRADE CODES
+
+grade$grade_clean <- gsub(x = grade$grade_full, pattern = "-|\\+", replacement = "- ")
+grade$grade_clean <- gsub(x = grade$grade_clean, pattern = ":", replacement = ": ")
+grade$grade_clean <- gsub(x = grade$grade_clean, pattern = "DISHON|DISHN|DIHSON", replacement = "Dishonor")
+grade$grade_clean <- gsub(x = grade$grade_clean, pattern = "TRANS|TRAN", replacement = " Transfer ")
+grade$grade_clean <- gsub(x = grade$grade_clean, pattern = "AUDIT", replacement = "Audit")
+grade$grade_clean <- gsub(x = grade$grade_clean, pattern = "NOT", replacement = "Not ")
+grade$grade_clean <- gsub(x = grade$grade_clean, pattern = "GRDPEND", replacement = "Grade Pending")
+grade$grade_clean <- gsub(x = grade$grade_clean, pattern = "PLUS", replacement = "Plus")
+grade$grade_clean <- gsub(x = grade$grade_clean, pattern = "WITHDRW", replacement = "Withdrawal")
+grade$grade_clean <- gsub(x = grade$grade_clean, pattern = "WTHFAIL", replacement = "Withdrawal Fail")
+grade$grade_clean <- gsub(x = grade$grade_clean, pattern = "DEPTEXM", replacement = "Department Exempt")
+grade$grade_clean <- gsub(x = grade$grade_clean, pattern = "CREDEXM", replacement = "Credit Exempt")
+grade$grade_clean <- gsub(x = grade$grade_clean, pattern = "VALID", replacement = " Valid")
+grade$grade_clean <- gsub(x = grade$grade_clean, pattern = "ACREN|ACRN", replacement = " Academic Renewal")
+grade$grade_clean <- gsub(x = grade$grade_clean, pattern = "UNSATIS", replacement = "Unsatisfactory")
+grade$grade_clean <- gsub(x = grade$grade_clean, pattern = "SATIS", replacement = "Satisfactory")
+grade$grade_clean <- gsub(x = grade$grade_clean, pattern = "INC", replacement = "Incomplete")
+grade$grade_clean <- gsub(x = grade$grade_clean, pattern = "IN PROG", replacement = "In Progress")
+grade$grade_clean <- gsub(x = grade$grade_clean, pattern = "YRLONG", replacement = "Year-Long")
+grade$grade_clean <- gsub(x = grade$grade_clean, pattern = "PEND WD", replacement = "Pending Withdrawal")
+grade$grade_clean <- gsub(x = grade$grade_clean, pattern = "UNDER|UNDE", replacement = "Under")
+grade$grade_clean <- gsub(x = grade$grade_clean, pattern = "INST", replacement = " Institutional Credit")
+grade$grade_clean <- gsub(x = grade$grade_clean, pattern = "GRDHOLD", replacement = "Grade Hold")
+grade$grade_clean <- gsub(x = grade$grade_clean, pattern = "\\(A\\)", replacement = " (A)")
+grade$grade_clean <- gsub(x = grade$grade_clean, pattern = "PASS", replacement = "Pass")
+grade$grade_clean <- gsub(x = grade$grade_clean, pattern = "ADVPLMT", replacement = "Advanced Placement")
+grade$grade_clean <- gsub(x = grade$grade_clean, pattern = "NO SHOW", replacement = "No Show")
+
+grade$grade_clean <- str_squish(grade$grade_clean)
+
+
+
+# LEVEL CODES
+
+level$level_clean <- gsub(x = level$level_full, pattern = "FinAid", replacement = "Financial Aid")
+
+
+
+# FABRICATE PRACTICE DATASET
+
+file <- "~/CASA HHMI/New OIE Queries/2019-12-12_casa_hhmi_gsu_wide_including_unfinished_sql_export.csv"
+
+students <- read_csv(file) %>%
+  filter(!is.na(GRAD_TERM)) %>%
+  select(SEX, RACE_CODES, ETHNIC_CODES, GRAD_TERM, GRAD_GPA,
+         GRAD_COLLEGE, GRAD_DEPARTMENT, GRAD_MAJOR, GRAD_DEGREE)
+
+students <- students[1:10000, ]
+
+students$SEX <- sample(students$SEX, replace=FALSE)
+students$RACE_CODES <- sample(students$RACE_CODES, replace=FALSE)
+students$ETHNIC_CODES <- sample(students$ETHNIC_CODES, replace=FALSE)
+students$GRAD_GPA <- sample(students$GRAD_GPA, replace=FALSE)
+
+rm(file)
+
+
+
+# SAVE INTERNAL & EXTERNAL DATASETS
+
+save(major, file = "data/major.RData")
+save(degree, file = "data/degree.RData")
+save(college, file = "data/college.RData")
+save(department, file = "data/department.RData")
+save(state, file = "data/state.RData")
+save(country, file = "data/country.RData")
+save(admit, file = "data/admit.RData")
+save(attribute, file = "data/attribute.RData")
+save(building, file = "data/building.RData")
+save(campus, file = "data/campus.RData")
+save(county, file = "data/county.RData")
+save(decision, file = "data/decision.RData")
+save(email, file = "data/email.RData")
+save(grade, file = "data/grade.RData")
+save(institution, file = "data/institution.RData")
+save(level, file = "data/level.RData")
+
+save(students, file = "data/students.RData")
+
+save(major, degree, college, department, country, state, admit, attribute,
+     building, campus, county, decision, email, grade, institution, level,
+     file = "sysdata.rda", compress = TRUE)
