@@ -26,7 +26,7 @@ to the existing semester, i.e. "Fall", "Spring", and "Summer" as \code{08},
 semester is also available.
 }
 \details{
-Notably, converion to academic terms fluidly opens all \code{term*} family functions,
+Notably, conversion to academic terms fluidly opens all \code{term*} family functions,
 e.g. \code{term_year_fiscal}, in package \code{panthr}.
 
 Because the warehouse year format is \code{YY}, dates prior to 1930 C.E. will
@@ -38,7 +38,7 @@ format or contain unrecognized month abbreviations are coerced to \code{NA}
 }
 \seealso{
 \code{term_dash}, \code{term_date}, \code{term_name}, \code{term_season},
-\code{term_year_academic}, \code{term_year_calendar}, \code{term_year_academic}
+\code{term_year_academic}, \code{term_year_calendar}, \code{term_year_fiscal}
 }
 \author{
 Jamison R. Crawford, Institutional Research Associate, Georgia State University
