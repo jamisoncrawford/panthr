@@ -100,7 +100,7 @@ Institutional Research Associate at [The Graduate School](https://graduate.gsu.e
 and [Center for the Advancement of Students and Alumni (CASA)](https://casa.gsu.edu/) 
 at Georgia State University. 
 
-He is an Associate Faculty member at [Arizona State University's](https://www.asu.edu/) 
+He is an Associate Faculty member at [Arizona State University](https://www.asu.edu/) 
 where he teaches Fundamentals of Data Science I to Master of Science candidates in
 Program Evaluation & Data Analytics (PEDA) at the [Watts College of Public Service 
 and Community Solutions](https://publicservice.asu.edu/) and coauthor of ["Foundations of
@@ -109,7 +109,7 @@ Data Science"](https://ds4ps.org/cpp-526-fall-2019/).
 ## Contributors
 
 The Office of Institutional Effectiveness (OIE) at Georgia State has been instrumental 
-in understanding data warehouse data, validation tables, and institutional conventions.
+in understanding warehouse data, validation tables, and institutional conventions.
 
 Very special thanks to:
 
