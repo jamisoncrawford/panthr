@@ -16,7 +16,7 @@ to \code{FALSE}.}
 }
 \value{
 A scalar or vector of values of class character containing
-full-length county names Missing values are preserved.
+full-length county names. Missing values are preserved.
 }
 \description{
 \code{decode_county} converts county code fields into full-length names

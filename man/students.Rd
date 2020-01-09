@@ -3,8 +3,8 @@
 \docType{data}
 \name{students}
 \alias{students}
-\title{10,000 Student Graduation Records}
-\format{A data frame with 10,000 rows and 9 variables.}
+\title{10,000 Simulated Graduation Records}
+\format{A data frame with 10,000 rows and 10 variables.}
 \source{
 GSU Data Warehouse: \code{edwprd.sdmcohortfr_us}
 }
@@ -12,17 +12,28 @@ GSU Data Warehouse: \code{edwprd.sdmcohortfr_us}
 students
 }
 \description{
-\code{students} is a dataset containing 10,000 records of undergraduate students with degrees
-conferred by Georgia State University between Summer, 2007 and Summer, 2019.
-The format simulates a 10,000-record SQL query but potentially identifying
-data have been shuffled for anonymity.
+\code{students} is a simulated dataset containing 10,000 fabricated records
+of undergraduate students with degrees conferred by Georgia State University
+between Summer, 2007 and Summer, 2019. This dataset was designed to recreate
+a 10,000-record SQL query export and is comprised of randomly generated
+GPA, date of birth, degree, college, department, and graduation terms that
+redistribute unique values from 10,000 real graduation records.
 }
 \details{
 Variables \code{SEX}, \code{RACE_CODES}, \code{ETHNIC_CODES}, and
-\code{GRAD_GPA} were shuffled across all 10,000 records using the formula:
+\code{GRAD_GPA} were simulated using a combination of random sampling of real,
+unique values with replacement and random number generation. \code{GRAD_DPA}
+is comprised of random values between 1.8 and 3.3. \code{DOB} is comprised of
+randomly generated dates ranging from 1970 to 2003.
+
+Unique permutations of \code{COLLEGE}, \code{DEPARTMENT}, \code{MAJOR}, and
+\code{DEGREE} are preserved for realism and randomly sampled with replacement.
 
 \code{students$variable <- sample(students$variable, replace = FALSE)}
 
-Random number generation function \code{set.seed()} was randomly selected and is unpublished.
+Sampling and random number generation are reproducible with function \code{set.seed()}.
+}
+\seealso{
+\code{unique}, \code{seq}, \code{sample}, \code{set.seed}
 }
 \keyword{datasets}

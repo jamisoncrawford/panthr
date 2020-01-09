@@ -18,21 +18,31 @@ globalVariables(c("admit",
 
 
 
-#' 10,000 Student Graduation Records
+#' 10,000 Simulated Graduation Records
 #'
-#' \code{students} is a dataset containing 10,000 records of undergraduate students with degrees
-#' conferred by Georgia State University between Summer, 2007 and Summer, 2019.
-#' The format simulates a 10,000-record SQL query but potentially identifying
-#' data have been shuffled for anonymity.
+#' \code{students} is a simulated dataset containing 10,000 fabricated records
+#' of undergraduate students with degrees conferred by Georgia State University
+#' between Summer, 2007 and Summer, 2019. This dataset was designed to recreate
+#' a 10,000-record SQL query export and is comprised of randomly generated
+#' GPA, date of birth, degree, college, department, and graduation terms that
+#' redistribute unique values from 10,000 real graduation records.
 #'
-#' @format A data frame with 10,000 rows and 9 variables.
+#' @format A data frame with 10,000 rows and 10 variables.
 #'
 #' @details Variables \code{SEX}, \code{RACE_CODES}, \code{ETHNIC_CODES}, and
-#' \code{GRAD_GPA} were shuffled across all 10,000 records using the formula:
+#' \code{GRAD_GPA} were simulated using a combination of random sampling of real,
+#' unique values with replacement and random number generation. \code{GRAD_DPA}
+#' is comprised of random values between 1.8 and 3.3. \code{DOB} is comprised of
+#' randomly generated dates ranging from 1970 to 2003.
+#'
+#' Unique permutations of \code{COLLEGE}, \code{DEPARTMENT}, \code{MAJOR}, and
+#' \code{DEGREE} are preserved for realism and randomly sampled with replacement.
 #'
 #' \code{students$variable <- sample(students$variable, replace = FALSE)}
 #'
-#' Random number generation function \code{set.seed()} was randomly selected and is unpublished.
+#' Sampling and random number generation are reproducible with function \code{set.seed()}.
+#'
+#' @seealso \code{unique}, \code{seq}, \code{sample}, \code{set.seed}
 #'
 #' @source GSU Data Warehouse: \code{edwprd.sdmcohortfr_us}
 
@@ -1160,6 +1170,59 @@ decode_campus <- function(code, clean = FALSE){
 
 
 
+#' Convert Country Codes to Full Names
+#'
+#' \code{decode_country} converts country code fields into full-length names
+#' by evaluating a scalar or vector of values of class character.
+#'
+#' @param code A scalar or vector of length n and class character containing
+#' one or more country codes.
+#'
+#' @return A scalar or vector of values of class character containing
+#' full-length country names. Missing values are preserved.
+#'
+#' @details Output may be made categorical using function
+#' \code{factor} or \code{as.factor}. This function also allows for easily
+#' tallying counts using, e.g., function \code{table}.
+#'
+#' Values containing unrecognized country codes are coerced to \code{NA}
+#' (missing) values and a warning message is thrown.
+#'
+#' @author Jamison R. Crawford, Institutional Research Associate, Georgia State University
+#'
+#' @seealso \code{table}
+#'
+#' @export
+
+decode_country <- function(code){
+
+  c <- code
+  v <- vector()
+  j <- country
+
+  '%!in%' <- function(x,y)!('%in%'(x,y))
+
+  for (i in seq_along(code)){
+
+    if (is.na(c[i])){v[i] <- NA}
+
+    if (!is.na(c[i]) & c[i] %!in% j$country_code){
+
+      v[i] <- NA
+      warning("One or more values passed to 'code =' was not recognized; coercing to NA", call. = F)
+
+    }
+
+    else if (!is.na(c[i]) & c[i] %in% j$country_code) {v[i] <- j[c[i] == j$country_code, "country_full"]}
+
+  }
+
+  return(unlist(v))
+
+}
+
+
+
 #' Convert County Codes to Full Names
 #'
 #' \code{decode_county} converts county code fields into full-length names
@@ -1174,7 +1237,7 @@ decode_campus <- function(code, clean = FALSE){
 #' to \code{FALSE}.
 #'
 #' @return A scalar or vector of values of class character containing
-#' full-length county names Missing values are preserved.
+#' full-length county names. Missing values are preserved.
 #'
 #' @details Output may be made categorical using function
 #' \code{factor} or \code{as.factor}. This function also allows for easily
@@ -2300,8 +2363,8 @@ date_term <- function(date, round.up = FALSE){
       if (round.up == FALSE){
 
         if (as.numeric(x) >= 1 & as.numeric(x) < 5){x <- "01"}
-        if (as.numeric(x) >= 5 & as.numeric(x) < 8){x <- "05"}
-        if (as.numeric(x) >= 8 & as.numeric(x) <= 12){x <- "08"}
+        else if (as.numeric(x) >= 5 & as.numeric(x) < 8){x <- "05"}
+        else if (as.numeric(x) >= 8 & as.numeric(x) <= 12){x <- "08"}
 
         v[i] <- paste0(year[i], x)
 
@@ -2310,8 +2373,8 @@ date_term <- function(date, round.up = FALSE){
       if (round.up == TRUE){
 
         if (as.numeric(x) >= 1 & as.numeric(x) < 5){x <- "05"}
-        if (as.numeric(x) >= 5 & as.numeric(x) < 8){x <- "08"}
-        if (as.numeric(x) >= 8 & as.numeric(x) <= 12){
+        else if (as.numeric(x) >= 5 & as.numeric(x) < 8){x <- "08"}
+        else if (as.numeric(x) >= 8 & as.numeric(x) <= 12){
 
           x <- "01"
 
@@ -2339,8 +2402,8 @@ date_term <- function(date, round.up = FALSE){
       if (round.up == FALSE){
 
         if (as.numeric(x) >= 1 & as.numeric(x) < 5){x <- "01"}
-        if (as.numeric(x) >= 5 & as.numeric(x) < 8){x <- "05"}
-        if (as.numeric(x) >= 8 & as.numeric(x) <= 12){x <- "08"}
+        else if (as.numeric(x) >= 5 & as.numeric(x) < 8){x <- "05"}
+        else if (as.numeric(x) >= 8 & as.numeric(x) <= 12){x <- "08"}
 
         v[i] <- paste0(year[i], x)
 
@@ -2349,8 +2412,8 @@ date_term <- function(date, round.up = FALSE){
       if (round.up == TRUE){
 
         if (as.numeric(x) >= 1 & as.numeric(x) < 5){x <- "05"}
-        if (as.numeric(x) >= 5 & as.numeric(x) < 8){x <- "08"}
-        if (as.numeric(x) >= 8 & as.numeric(x) <= 12){
+        else if (as.numeric(x) >= 5 & as.numeric(x) < 8){x <- "08"}
+        else if (as.numeric(x) >= 8 & as.numeric(x) <= 12){
 
           x <- "01"
 
