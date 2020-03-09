@@ -89,8 +89,11 @@ R CMD Check results currently clock at 20 seconds with 0 errors, 0 warnings, and
 1 note regarding compression optimization for internal `sysdata.rda` datasets.
 
 **2019-12-20:** Prototype package `panthr` documentation and functions first published.
+
 **2020-01-06:** Additional decode functions added with "clean" description variables.
+
 **2020-01-07:** Date functions added; visible `sysdata.rda` variable bindings added.
+
 **2020-01-08:** Internal `sysdata.rda` files debugged; field functions added. `README.md` created.
 
 ## About the Author
